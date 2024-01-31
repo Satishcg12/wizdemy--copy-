@@ -1,11 +1,11 @@
 <?php
 class AuthMiddleware implements Middleware
 {
-    public function handle()
+    public function handle($request)
     {
-        if (!isset($_SESSION['Auth']) || !$_SESSION['Auth']) {
-            header('Location: /login');
-            exit();            
+        if (!isset($_SESSION['Auth'])) {
+            header('location:/login');
+            exit();
         }
     }
 }

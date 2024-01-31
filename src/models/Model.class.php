@@ -67,22 +67,13 @@ class Model extends Database
         $res = $stmt->fetchAll();
         return $res;
     }
-    public static function belongsTo($model, $foreign_key)
+    public static function exists($column, $value)
     {
         $model = new static;
-        $stmt = $model->pdo->prepare('SELECT * FROM ' . $model->table . ' WHERE id = :id');
-        $stmt->bindParam(':id', $foreign_key);
+        $stmt = $model->pdo->prepare('SELECT * FROM ' . $model->table . ' WHERE ' . $column . ' = :value');
+        $stmt->bindParam(':value', $value);
         $stmt->execute();
         $res = $stmt->fetch();
-        return $res;
-    }
-    public static function hasMany($model, $foreign_key)
-    {
-        $model = new static;
-        $stmt = $model->pdo->prepare('SELECT * FROM ' . $model->table . ' WHERE ' . $foreign_key . ' = :id');
-        $stmt->bindParam(':id', $foreign_key);
-        $stmt->execute();
-        $res = $stmt->fetchAll();
         return $res;
     }
 }

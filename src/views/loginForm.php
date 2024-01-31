@@ -28,7 +28,7 @@ View::renderComponent('Header', [
                 Explore studymaterials from fellow students.
             </p>
             <form method="post" action="/login">
-                <input type="hidden" name="csrf_token" value="<?php CSRF::generateToken() ?>">
+                <input type="hidden" name="csrf_token" value="<?php echo CSRF::generateToken() ?>">
                 <!-- email -->
                 <div class="email">
                     <label for="email_username">Username / Email</label>

@@ -1,9 +1,10 @@
-<?php 
-class NoAuthMiddleware implements Middleware
+<?php
+
+class CSRFMiddleware implements Middleware
 {
     public function handle($request)
     {
-        if (isset($_SESSION['Auth'])) {
+        if (!CSRF::validateToken($request['csrf_token'])) {
             header('location:/');
             exit();
         }

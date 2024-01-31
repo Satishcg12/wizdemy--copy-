@@ -7,9 +7,5 @@ class StudyMaterial extends Model
     {
         parent::__construct();
     }
-    public function user()
-    {
-        return $this->belongsTo('User', 'user_id');
-    }
     
 }
