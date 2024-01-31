@@ -1,28 +1,34 @@
 <?php
-class AuthController
+class AuthController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct('User');
+    }
     public function login()
     {
-        View::render('loginForm');
+        $this->view('loginForm');
     }
     public function loginProcess()
     {
-        if (CSRF::validateToken($_POST['csrf_token'])) {
-            ToastNotification::error('Invalid CSRF token');
-            $_SESSION['old'] = $_POST;
-            header('location:/login');
-            exit();
-        }
+        
         $email_username = filter_var($_POST['email_username'], FILTER_SANITIZE_STRING);
         $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
+        
+        Validator::make ([
+            'email_username' => $email_username,
+            'password' => $password
+        ],[
+            'email_username' => ['required'],
+            'password' => ['required']
+        ]);
 
         $response = $this->validateLoginForm($email_username, $password); 
         
         if(!$response['status']) {
             ToastNotification::error($response['msg']);
             $_SESSION['old'] = $_POST;
-            header('location:/login');
-            exit();
+            $this->redirect('/login');
         }
 
         $user = new User();
@@ -30,12 +36,12 @@ class AuthController
         if (!$result['status']) {
             ToastNotification::error($result['msg']);
             $_SESSION['old'] = $_POST;
-            header('location:/login');
+            $this->redirect('/login');
         } else {
             $_SESSION['Auth'] = true;
             $_SESSION['user_id'] = $result['user_id'];
             ToastNotification::success($result['msg']);
-            header('location:/');
+            $this->redirect('/');
         }
     }
     public function logout()
@@ -43,7 +49,7 @@ class AuthController
         if (isset($_SESSION['Auth'])) {
             unset($_SESSION['Auth']);
             unset($_SESSION['user_id']);
-            ToastNotification::success('Logout successful');
+            ToastNotification::primary('You have been logged out');
         }
         header('location:/login');
     }
@@ -57,12 +63,6 @@ class AuthController
     }
     public function signupProcess()
     {
-        if (CSRF::validateToken($_POST['csrf_token'])) {
-            ToastNotification::error('Invalid CSRF token');
-            $_SESSION['old'] = $_POST;
-            header('location:/signup');
-            exit();
-        }
         $name = filter_var($_POST['name'], FILTER_SANITIZE_STRING);
         $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
         $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
@@ -74,8 +74,7 @@ class AuthController
         if(!$response['status']) {
             ToastNotification::error($response['msg']);
             $_SESSION['old'] = $_POST;
-            header('location:/signup');
-            exit();
+            $this->redirect('/signup');
         }
 
         $user = new User();

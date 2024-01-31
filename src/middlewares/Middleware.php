@@ -1,5 +1,5 @@
 <?php
 interface Middleware
 {
-    public function handle();
+    public function handle($request);
 }
