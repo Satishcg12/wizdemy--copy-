@@ -58,22 +58,26 @@ class Model extends Database
         $res = $stmt->execute();
         return $res;
     }
-    public static function where($column, $value)
+    public static function where(array $data, $operator = 'AND')
     {
+        // ['id' => 1, 'username' => 'admin']
         $model = new static;
-        $stmt = $model->pdo->prepare('SELECT * FROM ' . $model->table . ' WHERE ' . $column . ' = :value');
-        $stmt->bindParam(':value', $value);
+        $where = '';
+        // id = :id AND username = :username
+        foreach ($data as $key => $value) {
+            $where .= $key . ' = :' . $key . ' ' . $operator . ' ';
+        }
+        // id = :id AND username = :username AND
+        $where = rtrim($where, ' ' . $operator . ' ');
+        // id = :id AND username = :username
+        $stmt = $model->pdo->prepare('SELECT * FROM ' . $model->table . ' WHERE ' . $where );
+        
+        foreach ($data as $key => $value) {
+            $stmt->bindParam(':' . $key, $value);
+        }
         $stmt->execute();
         $res = $stmt->fetchAll();
         return $res;
-    }
-    public static function exists($column, $value)
-    {
-        $model = new static;
-        $stmt = $model->pdo->prepare('SELECT * FROM ' . $model->table . ' WHERE ' . $column . ' = :value');
-        $stmt->bindParam(':value', $value);
-        $stmt->execute();
-        $res = $stmt->fetch();
-        return $res;
+
     }
 }

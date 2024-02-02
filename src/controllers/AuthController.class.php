@@ -15,18 +15,15 @@ class AuthController extends Controller
         $email_username = filter_var($_POST['email_username'], FILTER_SANITIZE_STRING);
         $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
         
-        Validator::make ([
+        $validation = Validator::validate ([
             'email_username' => $email_username,
             'password' => $password
         ],[
             'email_username' => ['required'],
-            'password' => ['required']
+            'password' => ['required','min:8']
         ]);
-
-        $response = $this->validateLoginForm($email_username, $password); 
-        
-        if(!$response['status']) {
-            ToastNotification::error($response['msg']);
+        if(!$validation['status']) {
+            ToastNotification::error($validation['msg']);
             $_SESSION['old'] = $_POST;
             $this->redirect('/login');
         }
@@ -69,10 +66,24 @@ class AuthController extends Controller
         $confirm_password = filter_var($_POST['confirmPassword'], FILTER_SANITIZE_STRING);
         $agree_terms_condition = $_POST['agree-terms-condition'] ?? '';
         
+        $validation = Validator::validate ([
+            'name' => $name,
+            'email' => $email,
+            'password' => $password,
+            'password_confirmation' => $confirm_password,
+            'agree-terms-condition' => $agree_terms_condition
+        ],[
+            'name' => ['required','min:3','max:255'],
+            'email' => ['required','email','max:255'],
+            'password' => ['required','min:8','confirmed','max:255'],
+            'password_confirmation' => ['required','max:255'],
+            'agree-terms-condition' => ['required']
+        ]);
 
-        $response = $this->validateSignupForm($name, $email, $password, $confirm_password, $agree_terms_condition);
-        if(!$response['status']) {
-            ToastNotification::error($response['msg']);
+        if(!$validation['status']) {
+            foreach ($validation['msg'] as $msg) {
+                ToastNotification::error($msg);
+            }
             $_SESSION['old'] = $_POST;
             $this->redirect('/signup');
         }

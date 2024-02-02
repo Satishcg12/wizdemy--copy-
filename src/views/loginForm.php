@@ -157,5 +157,6 @@ View::renderComponent('Header', [
 
 </main>
 <?php
+View::renderComponent('ToastNotification'); 
 View::renderComponent('Footer');
 ?>

@@ -99,5 +99,6 @@ I agree to&nbsp;</label>
     </section>
   </main>
 <?php
+View::renderComponent('ToastNotification');
 View::renderComponent('Footer');
 ?>
