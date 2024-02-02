@@ -20,6 +20,8 @@ if (($pos = strpos($request, '?')) !== false) {
     $request = substr($request, 0, $pos);
 }
 
+// $request = parse_url($_SERVER['REQUEST_URI'])['path'];
+
 $route = new Router();
 
 
@@ -45,3 +47,9 @@ try{
     }
 
 }
+
+echo '<pre>';
+var_dump($_SESSION);
+echo '</pre>';
+
+if (isset($_SESSION['old']))unset($_SESSION['old']);

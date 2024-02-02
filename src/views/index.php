@@ -1,6 +1,8 @@
 <?php
 View::renderComponent('Header', ['page_title' => SITE_NAME, 'stylesheets' => ['styles'], 'scripts' => ['script', 'toast', 'threeDotMenu', 'sideInfo', 'searchOverlay','parseTimeAgo']]);
 View::renderComponent('SideNav', ['current_page' => 'index']);
+// get the study materials from the controller
+$studyMaterials = $data['studyMaterials'];
 
 ?>
 
@@ -13,7 +15,7 @@ View::renderComponent('SideNav', ['current_page' => 'index']);
             <?php if ($studyMaterials['status']): ?>
                 <?php foreach ($studyMaterials['data'] as $studyMaterial): ?>
                     <!-- card  -->
-                    <?php req('src/views/components/Card.php', ['studyMaterial' => $studyMaterial]) ?>
+                    <?php View::renderComponent('StudyMaterialCard', ['studyMaterial' => $studyMaterial]) ?>    
                 <?php endforeach; ?>
             <?php else: ?>
                 <div class="no-data" >
@@ -51,6 +53,7 @@ View::renderComponent('SideNav', ['current_page' => 'index']);
 </main>
 
 <?php
+View::renderComponent('ToastNotification');
 View::renderComponent('SearchOverlay');
 View::renderComponent('SideInfo');
 View::renderComponent('ThreeDotMenu');
