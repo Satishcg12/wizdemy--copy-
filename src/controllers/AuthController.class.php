@@ -3,7 +3,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        parent::__construct('User');
+        parent::__construct('Users');
     }
     public function login()
     {
@@ -11,32 +11,33 @@ class AuthController extends Controller
     }
     public function loginProcess()
     {
-        
+
         $email_username = filter_var($_POST['email_username'], FILTER_SANITIZE_STRING);
         $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
-        
-        $validation = Validator::validate ([
+
+        $validation = Validator::validate([
             'email_username' => $email_username,
             'password' => $password
-        ],[
-            'email_username' => ['required'],
-            'password' => ['required','min:8']
+        ], [
+            'email_username' => ['required', 'min:3'],
+            'password' => ['required', 'min:8']
         ]);
-        if(!$validation['status']) {
-            ToastNotification::error($validation['msg']);
+        if (!$validation['status']) {
+            foreach ($validation['msg'] as $msg) {
+                ToastNotification::error($msg);
+            }
             $_SESSION['old'] = $_POST;
             $this->redirect('/login');
         }
 
-        $user = new User();
-        $result = $user->login($email_username, $password);
+        $result = $this->model->login($email_username, $password);
         if (!$result['status']) {
             ToastNotification::error($result['msg']);
             $_SESSION['old'] = $_POST;
             $this->redirect('/login');
         } else {
             $_SESSION['Auth'] = true;
-            $_SESSION['user_id'] = $result['user_id'];
+            $_SESSION['user_id'] = $result['user']['id'];
             ToastNotification::success($result['msg']);
             $this->redirect('/');
         }
@@ -65,32 +66,30 @@ class AuthController extends Controller
         $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
         $confirm_password = filter_var($_POST['confirmPassword'], FILTER_SANITIZE_STRING);
         $agree_terms_condition = $_POST['agree-terms-condition'] ?? '';
-        
-        $validation = Validator::validate ([
+
+        $validation = Validator::validate([
             'name' => $name,
             'email' => $email,
             'password' => $password,
             'password_confirmation' => $confirm_password,
             'agree-terms-condition' => $agree_terms_condition
-        ],[
-            'name' => ['required','min:3','max:255'],
-            'email' => ['required','email','max:255'],
-            'password' => ['required','min:8','confirmed','max:255'],
-            'password_confirmation' => ['required','max:255'],
+        ], [
+            'name' => ['required', 'min:3', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'min:8', 'confirmed', 'max:255'],
+            'password_confirmation' => ['required', 'max:255'],
             'agree-terms-condition' => ['required']
         ]);
 
-        if(!$validation['status']) {
+        if (!$validation['status']) {
             foreach ($validation['msg'] as $msg) {
                 ToastNotification::error($msg);
             }
             $_SESSION['old'] = $_POST;
             $this->redirect('/signup');
         }
-
-        $user = new User();
         $username = $this->generateUsername($email);
-        $result = $user->signup($name, $username, $email, $password);
+        $result = $this->model->signup($name, $username, $email, $password);
         if (!$result['status']) {
             ToastNotification::error($result['msg']);
             $_SESSION['old'] = $_POST;
@@ -100,69 +99,16 @@ class AuthController extends Controller
             header('location:/login');
         }
     }
-    private function validateLoginForm($email_username, $password)
-    {
-        if (empty($email_username) || empty($password)) {
-            return [
-                'status' => false,
-                'msg' => 'Please fill all the fields'
-            ];
-        } else {
-            return [
-                'status' => true,
-                'msg' => 'Success'
-            ];
-        }
-    }
-    private function validateSignupForm($name, $email, $password, $confirm_password, $agree_terms_conditions)
-    {
-        $user = new User();
-        if (empty($name) || empty($email) || empty($password) || empty($confirm_password)) {
-            return [
-                'status' => false,
-                'msg' => 'Please fill all the fields'
-            ];
-        } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return [
-                'status' => false,
-                'msg' => 'Please enter a valid email'
-            ];
-        } else if ($user->emailExists($email)) {
-            return [
-                'status' => false,
-                'msg' => 'Email already exists'
-            ];
-        }else if (strlen($password) < 8) {
-            return [
-                'status' => false,
-                'msg' => 'Password must be at least 8 characters'
-            ];
-        }
-        else if ($password !== $confirm_password) {
-            return [
-                'status' => false,
-                'msg' => 'Password and confirm password does not match'
-            ];
-        } else if ($agree_terms_conditions !== 'on') {
-            return [
-                'status' => false,
-                'msg' => 'Please agree to terms and conditions'
-            ];
-        } else {
-            return [
-                'status' => true,
-                'msg' => 'Success'
-            ];
-        }
-    }
+
     private function generateUsername(string $email): string
     {
-        $username = explode('@', $email)[0];
-        $user = new User();
-        $usernameExists = $user->usernameExists($username);
-        if ($usernameExists) {
-            $username = $username . rand(1, 100);
-        }
+        do {
+            $username = explode('@', $email)[0];
+            $usernameExists = $this->model->exists('username', $username);
+            if ($usernameExists) {
+                $username = $username . rand(1, 100);
+            }
+        } while ($usernameExists);
         return $username;
     }
 }

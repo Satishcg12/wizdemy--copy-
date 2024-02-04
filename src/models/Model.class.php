@@ -26,9 +26,34 @@ class Model extends Database
         $res = $stmt->fetchAll();
         return $res;
     }
+    public static function get($limit, $offset)
+    {
+        $model = new static;
+        $stmt = $model->pdo->prepare('SELECT * FROM ' . $model->table . ' LIMIT :limit OFFSET :offset');
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $res = $stmt->fetchAll();
+        return $res;
+    }
+    public static function join($table, $foreign_key, $local_key, $columns = '*')
+    {
+        $model = new static;
+        $stmt = $model->pdo->prepare('SELECT ' . $columns . ' FROM ' . $model->table . ' JOIN ' . $table . ' ON ' . $model->table . '.' . $local_key . ' = ' . $table . '.' . $foreign_key); 
+        $stmt->execute();
+        $res = $stmt->fetchAll();
+        return $res;
+    }
+
     public static function create(array $data)
     {
         $model = new static;
+        // check if the data keys are in the fillable array
+        foreach ($data as $key => $value) {
+            if (!in_array($key, $model->fillable)) {
+                return false;
+            }
+        }
         $keys = array_keys($data);
         $keys = implode(',', $keys);
         $values = array_values($data);
@@ -79,5 +104,13 @@ class Model extends Database
         $res = $stmt->fetchAll();
         return $res;
 
+    }
+    public function exists($key, $value)
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM ' . $this->table . ' WHERE ' . $key . ' = :value');
+        $stmt->bindParam(':value', $value);
+        $stmt->execute();
+        $res = $stmt->fetch();
+        return $res;
     }
 }

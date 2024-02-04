@@ -6,23 +6,23 @@
 class Router
 {
 
-    private $routes = [];
-    private $middlewares = [];
+    private static $routes = [];
+    private static $middlewares = [];
 
-    public function get($route, $callback, $middleware = [])
+    public static function get($route, $callback, $middleware = [])
     {
         if ($middleware) {
-            $this->middlewares['GET'][$route] = $middleware;
+            self::$middlewares['GET'][$route] = $middleware;
         }
-        $this->routes['GET'][$route] = $callback;
+        self::$routes['GET'][$route] = $callback;
     }
     
-    public function post($route, $callback, $middleware = [])
+    public static function post($route, $callback, $middleware = [])
     {
         if ($middleware) {
-            $this->middlewares['POST'][$route] = $middleware;
+            self::$middlewares['POST'][$route] = $middleware;
         }
-        $this->routes['POST'][$route] = $callback;
+        self::$routes['POST'][$route] = $callback;
     }
     
     /**
@@ -32,20 +32,20 @@ class Router
      * @param string $uri
      * @return void
      */
-    public function dispatch($method, $uri)
+    public static function dispatch($method, $uri)
     {
         $method = strtoupper($method);
         // if method is not allowed
-        if (!isset($this->routes[$method])) {
+        if (!isset(self::$routes[$method])) {
             throw new Exception('Method not allowed');
         }
         // if route is not found
-        if (!isset($this->routes[$method][$uri])) {
+        if (!isset(self::$routes[$method][$uri])) {
             throw new Exception('Route not found', 404);
         }
         // if middleware is set
-        if (isset($this->middlewares[$method][$uri])) {
-            $middlewares = $this->middlewares[$method][$uri];
+        if (isset(self::$middlewares[$method][$uri])) {
+            $middlewares = self::$middlewares[$method][$uri];
             // if middleware is not an array, convert it to array
             if (!is_array($middlewares)) {
                 $middlewares = [$middlewares];
@@ -62,10 +62,10 @@ class Router
                 $middleware->handle($_REQUEST);
             }
             // call the controller method
-            $this->callControllerMethod($this->routes[$method][$uri]);
+            self::callControllerMethod(self::$routes[$method][$uri]);
         } else {
             // call the controller method
-            $this->callControllerMethod($this->routes[$method][$uri]);
+            self::callControllerMethod(self::$routes[$method][$uri]);
         }
     }
     
@@ -75,7 +75,7 @@ class Router
      * @param string $callback
      * @return void
      */
-    private function callControllerMethod($callback)
+    private static function callControllerMethod($callback)
     {
         if (!is_callable($callback)) {
             

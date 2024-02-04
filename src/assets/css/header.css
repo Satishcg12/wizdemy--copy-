@@ -46,7 +46,6 @@ header > .logo {
   width: 1.5rem /* 24px */;
   height: 1.5rem /* 24px */;
   transition: var(--transition);
-  flex-shrink: 0;
 }
 
 .header-menu > .upload-button,

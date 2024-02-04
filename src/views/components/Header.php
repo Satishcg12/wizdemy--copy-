@@ -9,12 +9,12 @@
   </title>
   <?php if (isset($data['stylesheets'])): ?>
     <?php foreach ($data['stylesheets'] as $stylesheet): ?>
-      <link rel="stylesheet" href="<?= 'src/assets/css/' . $stylesheet . '.css' ?>" />
+      <link rel="stylesheet" href="<?= '/src/assets/css/' . $stylesheet . '.css' ?>" />
     <?php endforeach; ?>
   <?php endif; ?>
   <?php if (isset($data['scripts'])): ?>
     <?php foreach ($data['scripts'] as $script): ?>
-      <script src="<?= 'src/assets/js/' . $script . '.js' ?>" defer></script>
+      <script src="<?= '/src/assets/js/' . $script . '.js' ?>" defer></script>
     <?php endforeach; ?>
   <?php endif; ?>
 </head>

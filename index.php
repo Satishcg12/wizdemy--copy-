@@ -13,32 +13,12 @@ require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/src/utils/ClassAutoloader.php';
 require_once __DIR__ . '/src/utils/session.config.php';
 
-$request = $_SERVER['REQUEST_URI'];  
+$request = parse_url($_SERVER['REQUEST_URI'])['path'];
 
-// Remove any query parameters
-if (($pos = strpos($request, '?')) !== false) {
-    $request = substr($request, 0, $pos);
-}
-
-// $request = parse_url($_SERVER['REQUEST_URI'])['path'];
-
-$route = new Router();
-
-
-$route->get('/', 'HomeController@index');
-$route->get('/login', 'AuthController@login', 'NoAuthMiddleware');
-$route->post('/login', 'AuthController@loginProcess', ['CSRFMiddleware','NoAuthMiddleware']);
-$route->get('/signup', 'AuthController@signup', 'NoAuthMiddleware');
-$route->post('/signup', 'AuthController@signupProcess', 'NoAuthMiddleware');
-$route->get('/logout', 'AuthController@logout', 'AuthMiddleware');
-$route->get('/profile', 'AuthController@profile', 'AuthMiddleware');
-
-
+require_once __DIR__ . '/routes.php';
 
 try{
-    $route->dispatch($_SERVER['REQUEST_METHOD'], $request);
-
-    
+    Router::dispatch($_SERVER['REQUEST_METHOD'], $request);    
 } catch (Exception $e) {
     if ($e->getCode() == 404) {
         View::render('404');
@@ -47,9 +27,4 @@ try{
     }
 
 }
-
-echo '<pre>';
-var_dump($_SESSION);
-echo '</pre>';
-
 if (isset($_SESSION['old']))unset($_SESSION['old']);
