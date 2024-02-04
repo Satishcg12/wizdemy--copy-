@@ -1,6 +1,6 @@
 <?php
 define('SITE_NAME', 'Wizdemy');
-define('SITE_DOMAIN', 'http://localhost:8000');
+define('SITE_DOMAIN', $_SERVER['HTTP_HOST']);
 
 define('ROOT_DIR', __DIR__ . '/');
 

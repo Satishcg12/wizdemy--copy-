@@ -208,7 +208,7 @@ form > .responding-to > p {
   color: rgb(37 99 235);
 }
 
-button {
+.form-section button {
   grid-column-start: 1;
   padding: 0.75rem 1.25rem/* 12px 20px */;
   background-color: rgb(17 24 39);

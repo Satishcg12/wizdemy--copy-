@@ -28,6 +28,7 @@ View::renderComponent('Header', [
           Join WizDemy today and dive into a world of knowledge.
         </p>
         <form method="post" action="/signup" class="form">
+          <input type="hidden" name="csrf_token" value="<?php echo CSRF::generateToken(); ?>" />
           <!-- full name -->
           <div class="fullname">
             <label for="name">Full Name</label>
