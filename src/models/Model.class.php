@@ -3,114 +3,172 @@
 class Model extends Database
 {
     protected $table;
-
     protected $fillable = [];
-    public function __construct()
+    protected $query;
+    protected $bindings = [];
+    public function __construct($table)
     {
         parent::__construct();
+        $this->table = $table;
+        $this->query = 'SELECT * FROM ' . $this->table;
     }
-    public static function find($id)
+
+    public function all()
     {
-        $model = new static;
-        $stmt = $model->pdo->prepare('SELECT * FROM ' . $model->table . ' WHERE id = :id');
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        $res = $stmt->fetch();
-        return $res;
-    }
-    public static function all()
-    {
-        $model = new static;
+        $model = $this;
         $stmt = $model->pdo->prepare('SELECT * FROM ' . $model->table);
         $stmt->execute();
-        $res = $stmt->fetchAll();
-        return $res;
+        return $stmt->fetchAll();
     }
-    public static function get($limit, $offset)
+    public function select(array $columns)
     {
-        $model = new static;
-        $stmt = $model->pdo->prepare('SELECT * FROM ' . $model->table . ' LIMIT :limit OFFSET :offset');
-        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-        $stmt->execute();
-        $res = $stmt->fetchAll();
-        return $res;
-    }
-    public static function join($table, $foreign_key, $local_key, $columns = '*')
-    {
-        $model = new static;
-        $stmt = $model->pdo->prepare('SELECT ' . $columns . ' FROM ' . $model->table . ' JOIN ' . $table . ' ON ' . $model->table . '.' . $local_key . ' = ' . $table . '.' . $foreign_key); 
-        $stmt->execute();
-        $res = $stmt->fetchAll();
-        return $res;
-    }
+        $model = $this;
+        $columns = implode(', ', $columns);
 
-    public static function create(array $data)
+        $model->query = 'SELECT ' . $columns . ' FROM ' . $model->table;
+        return $model;
+    }
+    public function where($column, $value, $operator = '=')
     {
-        $model = new static;
-        // check if the data keys are in the fillable array
-        foreach ($data as $key => $value) {
-            if (!in_array($key, $model->fillable)) {
-                return false;
+        $model = $this;
+        $column_param = str_replace('.', '_', $column);
+        
+        if (strpos($model->query, 'WHERE') === false) {
+            $model->query .= ' WHERE ' . $column . ' ' . $operator . " :$column_param ";
+        } else {
+            $model->query .= ' AND ' . $column . ' ' . $operator . " :$column_param ";
+        }
+
+        $model->bindings[":$column_param"] = $value;
+        return $model;
+    }
+    public function andWhere($column, $value, $operator = '=')
+    {
+        $model = $this;
+        $model->query .= ' AND ' . $column . ' ' . $operator . " :$column ";
+        $model->bindings[":$column"] = $value;
+        return $model;
+    }
+    public function orWhere($column, $value, $operator = '=')
+    {
+        $model = $this;
+        $model->query .= ' OR ' . $column . ' ' . $operator . " :$column ";
+        $model->bindings[":$column"] = $value;
+        return $model;
+    }
+    public function join($table, $first, $operator, $second)
+    {
+        $model = $this;
+        $model->query .= ' JOIN ' . $table . ' ON ' . $first . ' ' . $operator . ' ' . $second;
+        return $model;
+    }
+    public function orderBy($column, $direction = 'ASC')
+    {
+        $model = $this;
+        $model->query .= ' ORDER BY ' . $column . ' ' . $direction;
+        return $model;
+    }
+    public function limit($limit)
+    {
+        $model = $this;
+        $model->query .= ' LIMIT ' . $limit;
+        return $model;
+    }
+    public function offset($offset)
+    {
+        $model = $this;
+        $model->query .= ' OFFSET ' . $offset;
+        return $model;
+    }
+    public function first()
+    {
+        $model = $this;
+        $model->query .= ' LIMIT 1';
+        // die($model->query);
+        $stmt = $model->pdo->prepare($model->query);
+        $stmt->execute($model->bindings);
+        //clean up
+        $model->query = 'SELECT * FROM ' . $model->table;
+        $model->bindings = [];
+
+        return $stmt->fetch();
+    }
+    public function get()
+    {
+        $model = $this;
+
+
+        $stmt = $model->pdo->prepare($model->query);
+        $stmt->execute($model->bindings);
+        //clean up
+        $model->query = 'SELECT * FROM ' . $model->table;
+        $model->bindings = [];
+
+        return $stmt->fetchAll();
+    }
+    public function count()
+    {
+        $model = $this;
+        $query = 'SELECT COUNT(*) FROM ' . $model->table . substr($model->query, strlen('SELECT * FROM ' . $model->table));
+        $stmt = $model->pdo->prepare($query);
+        $stmt->execute($model->bindings);
+        return $stmt->fetchColumn();
+    }
+    public function max($column)
+    {
+        $model = $this;
+        $model->query = 'SELECT MAX(' . $column . ') FROM ' . $model->table . substr($model->query, strlen('SELECT * FROM ' . $model->table));
+        $stmt = $model->pdo->prepare($model->query);
+        $stmt->execute();
+        //clean up
+        $model->query = 'SELECT * FROM ' . $model->table;
+        $model->bindings = [];
+
+        return $stmt->fetchColumn();
+    }
+    public function find($id)
+    {
+        $model = $this;
+        $model->query .= " WHERE id = :id";
+        $model->bindings[':id'] = $id;
+        $stmt = $model->pdo->prepare($model->query);
+        $stmt->execute($model->bindings);
+        //clean up
+        $model->query = 'SELECT * FROM ' . $model->table;
+        $model->bindings = [];
+
+        return $stmt->fetch();
+    }
+    public function create(array $data)
+    {
+        $model = $this;
+        //check fillable colums
+        if (count($model->fillable) > 0) {
+            foreach ($data as $key => $value) {
+                if (!in_array($key, $model->fillable)) {
+                    unset($data[$key]);
+                }
             }
         }
-        $keys = array_keys($data);
-        $keys = implode(',', $keys);
-        $values = array_values($data);
-        $values = implode("','", $values);
-        $values = "'" . $values . "'";
-        $stmt = $model->pdo->prepare('INSERT INTO ' . $model->table . ' (' . $keys . ') VALUES (' . $values . ')');
-        $res = $stmt->execute();
-        return $res;
+        $columns = implode(', ', array_keys($data));
+        $values = implode(', :', array_keys($data));
+        $query = 'INSERT INTO ' . $model->table . ' (' . $columns . ') VALUES (:' . $values . ')';
+        $stmt = $model->pdo->prepare($query);
+        $stmt->execute($data);
+        return $stmt->rowCount();
     }
-    public static function update(array $data, $id)
+    public function update(array $data)
     {
-        $model = new static;
-        $keys = array_keys($data);
-        $values = array_values($data);
-        $values = implode("','", $values);
-        $values = "'" . $values . "'";
-        $stmt = $model->pdo->prepare('UPDATE ' . $model->table . ' SET ' . $keys[0] . ' = ' . $values . ' WHERE id = :id');
-        $stmt->bindParam(':id', $id);
-        $res = $stmt->execute();
-        return $res;
-    }
-    public static function delete($id)
-    {
-        $model = new static;
-        $stmt = $model->pdo->prepare('DELETE FROM ' . $model->table . ' WHERE id = :id');
-        $stmt->bindParam(':id', $id);
-        $res = $stmt->execute();
-        return $res;
-    }
-    public static function where(array $data, $operator = 'AND')
-    {
-        // ['id' => 1, 'username' => 'admin']
-        $model = new static;
-        $where = '';
-        // id = :id AND username = :username
+        $model = $this;
+        $set = '';
         foreach ($data as $key => $value) {
-            $where .= $key . ' = :' . $key . ' ' . $operator . ' ';
+            $set .= $key . ' = :' . $key . ', ';
         }
-        // id = :id AND username = :username AND
-        $where = rtrim($where, ' ' . $operator . ' ');
-        // id = :id AND username = :username
-        $stmt = $model->pdo->prepare('SELECT * FROM ' . $model->table . ' WHERE ' . $where );
-        
-        foreach ($data as $key => $value) {
-            $stmt->bindParam(':' . $key, $value);
-        }
-        $stmt->execute();
-        $res = $stmt->fetchAll();
-        return $res;
+        $set = rtrim($set, ', ');
+        $query = 'UPDATE ' . $model->table . ' SET ' . $set . substr($model->query, strlen('SELECT * FROM ' . $model->table));
+        $stmt = $model->pdo->prepare($query);
+        $stmt->execute($data + $model->bindings);
+        return $stmt->rowCount();
+    }
 
-    }
-    public function exists($key, $value)
-    {
-        $stmt = $this->pdo->prepare('SELECT * FROM ' . $this->table . ' WHERE ' . $key . ' = :value');
-        $stmt->bindParam(':value', $value);
-        $stmt->execute();
-        $res = $stmt->fetch();
-        return $res;
-    }
 }

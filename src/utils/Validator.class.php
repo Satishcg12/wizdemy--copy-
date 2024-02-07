@@ -47,8 +47,8 @@ class Validator
                         break;
                     case 'image':
                         if (isset($request[$key])) {
-                            $allowed = ['jpg', 'jpeg', 'png'];
-                            $ext = pathinfo($request[$key], PATHINFO_EXTENSION);
+                            $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+                            $ext = pathinfo($request[$key]['name'], PATHINFO_EXTENSION);
                             if (!in_array($ext, $allowed)) {
                                 $errors[] = 'The ' . $key . ' field must be an image';
                             }
@@ -56,16 +56,30 @@ class Validator
                         break;
                     case 'file':
                         if (isset($request[$key])) {
-                            // $r[1] = 'pdf'
-
-                            $allowed = [$r[1]] ?? ['pdf', 'doc', 'docx'];
-                            $ext = pathinfo($request[$key], PATHINFO_EXTENSION);
+                            $allowed = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'];
+                            $ext = pathinfo($request[$key]['name'], PATHINFO_EXTENSION);
                             if (!in_array($ext, $allowed)) {
                                 $errors[] = 'The ' . $key . ' field must be a file';
                             }
                         }
                         break;
                     case 'size':
+                        if (isset($request[$key])) {
+                            $size = $request[$key]['size'];
+                            if ($size > 1000000) {
+                                $errors[] = 'The ' . $key . ' field must be at most 1 MB';
+                            }
+                        }
+                        break;
+                    case 'max-size':
+                        if (isset($request[$key])) {
+                            $size = $request[$key]['size'];
+                            if ($size > $r[1]) {
+                                $errors[] = 'The ' . $key . ' field must be at most ' . $r[1] . ' KB';
+                            }
+                        }
+                        break;
+                    case 'min-size':
                         if (isset($request[$key])) {
                             $size = $r[1];
                             if ($size < 1000) {

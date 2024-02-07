@@ -3,8 +3,7 @@ class Requests extends Model
 {
     public function __construct()
     {
-        parent::__construct();
-        $this->table = 'study_material_requests';
+        parent::__construct('study_material_requests');
         $this->fillable = ['title', 'description', 'user_id', 'education_level', 'semester', 'subject', 'class_faculty', 'document_type'];
     }
     // get all requests with user joint, arrange by latest

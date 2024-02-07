@@ -1,4 +1,14 @@
 <?php
+// Change upload size limit
+ini_set('upload_max_filesize', '10M');
+ini_set('post_max_size', '10M');
+ini_set('max_input_time', 300);
+ini_set('max_execution_time', 300);
+
+
+
+
+//site config
 define('SITE_NAME', 'Wizdemy');
 define('SITE_DOMAIN', $_SERVER['HTTP_HOST']);
 
