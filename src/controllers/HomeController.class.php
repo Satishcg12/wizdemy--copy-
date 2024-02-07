@@ -7,9 +7,10 @@ class HomeController extends Controller
     }
     public function index()
     {
-        $studyMaterials = StudyMaterial::all();
+        $studyMaterials = $this->model->all();
         $this->view('index', ['studyMaterials' => $studyMaterials]);
     }
+    
     public function create()
     {
         $this->view('createStudyMaterial');

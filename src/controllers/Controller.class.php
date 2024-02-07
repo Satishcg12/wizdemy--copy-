@@ -13,6 +13,14 @@ class Controller{
         header('Location: ' . $url);
         exit();
     }
+    public function back(){
+        if (isset($_SERVER['HTTP_REFERER'])){
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+        } else {
+            header('Location: /');
+        }
+        exit();
+    }
     protected function view($view, $data = []){
         View::render($view, $data);
     }

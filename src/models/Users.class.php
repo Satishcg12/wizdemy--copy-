@@ -3,13 +3,12 @@ class Users extends Model
 {
     public function __construct()
     {
-        parent::__construct();
-        $this->table = 'users';
+        parent::__construct('users');
         $this->fillable = ['full_name', 'username', 'email', 'password', 'bio'];
     }
     public function login(string $username, string $password)
     {
-        $res = $this->where(['email' => $username, 'username' => $username], 'OR');
+        $res = $this->select(['id','password'])->where('username', $username)->orWhere('email', $username)->get();
         if ($res) {
             $user = $res[0];
             if (password_verify($password, $user['password'])) {

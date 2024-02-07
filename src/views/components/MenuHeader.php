@@ -33,7 +33,7 @@
                 </svg>
             </button>
             <!-- uplaod button -->
-            <a href="/upload" class="upload-button">
+            <a href="/studymaterial/create" class="upload-button">
                 <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>

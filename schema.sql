@@ -35,6 +35,8 @@ CREATE TABLE study_material_requests (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+
 -- Create the study_materials table
 CREATE TABLE study_materials (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -50,10 +52,7 @@ CREATE TABLE study_materials (
     author VARCHAR(255) NOT NULL,
     file_path VARCHAR(255) NOT NULL,
     thumbnail_path VARCHAR(255) NOT NULL,
-    class VARCHAR(255) NOT NULL,
-    likes INT DEFAULT 0,
-    comments INT DEFAULT 0,
-    reports INT DEFAULT 0,
+    class_faculty VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),

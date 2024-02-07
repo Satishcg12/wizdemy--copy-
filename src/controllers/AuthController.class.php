@@ -12,8 +12,8 @@ class AuthController extends Controller
     public function loginProcess()
     {
 
-        $email_username = filter_var($_POST['email_username'], FILTER_SANITIZE_STRING);
-        $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
+        $email_username = $_POST['email_username'];
+        $password = $_POST['password'];
 
         $validation = Validator::validate([
             'email_username' => $email_username,
@@ -39,7 +39,7 @@ class AuthController extends Controller
             $_SESSION['Auth'] = true;
             $_SESSION['user_id'] = $result['user']['id'];
             ToastNotification::success($result['msg']);
-            $this->redirect('/');
+            $this->back();
         }
     }
     public function logout()
@@ -61,10 +61,10 @@ class AuthController extends Controller
     }
     public function signupProcess()
     {
-        $name = filter_var($_POST['name'], FILTER_SANITIZE_STRING);
+        $name = $_POST['name'];
         $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-        $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
-        $confirm_password = filter_var($_POST['confirmPassword'], FILTER_SANITIZE_STRING);
+        $password = $_POST['password'];
+        $confirm_password = $_POST['confirmPassword'];
         $agree_terms_condition = $_POST['agree-terms-condition'] ?? '';
 
         $validation = Validator::validate([

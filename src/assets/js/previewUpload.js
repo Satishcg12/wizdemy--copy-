@@ -3,40 +3,41 @@ var fileInput = document.getElementById('file-thumbnail');
 var dropZone = document.querySelector('.file-thumbnail label');
 
 // Add event listeners for drag events
-dropZone.addEventListener('dragover', function(e) {
-  e.preventDefault();
-  this.style.backgroundColor = '#cccccc'; // Add a visual cue that the user can drop a file
+dropZone.addEventListener('dragover', function (e) {
+    e.preventDefault();
+    this.style.backgroundColor = '#cccccc'; // Add a visual cue that the user can drop a file
 });
 
-dropZone.addEventListener('dragleave', function(e) {
-  this.style.backgroundColor = ''; // Remove the visual cue
+dropZone.addEventListener('dragleave', function (e) {
+    this.style.backgroundColor = ''; // Remove the visual cue
 });
 
-dropZone.addEventListener('drop', function(e) {
-  e.preventDefault();
-  this.style.backgroundColor = ''; // Remove the visual cue
+dropZone.addEventListener('drop', function (e) {
+    e.preventDefault();
+    this.style.backgroundColor = ''; // Remove the visual cue
 
-  // Get the dropped files
-  var files = e.dataTransfer.files;
+    // Get the dropped files
+    var files = e.dataTransfer.files;
 
-  // If a file was dropped, trigger the file input's change event
-  if (files.length > 0) {
-    fileInput.files = files;
-    var event = new Event('change');
-    fileInput.dispatchEvent(event);
-  }
+
+    // If a file was dropped, trigger the file input's change event
+    if (files.length > 0) {
+        fileInput.files = files;
+        var event = new Event('change');
+        fileInput.dispatchEvent(event);
+    }
 });
 
 document.getElementById('file-thumbnail').addEventListener('change', function (e) {
     var file = e.target.files[0];
     var reader = new FileReader();
-  
-    reader.onloadend = function() {
+
+    reader.onloadend = function () {
         document.querySelector('.file-thumbnail label').style.backgroundImage = 'url(' + reader.result + ')';
     }
-  
+
     if (file) {
-      reader.readAsDataURL(file);
+        reader.readAsDataURL(file);
     }
 });
 //remove image if already uploaded on click
@@ -91,13 +92,15 @@ document.getElementById('file-document').addEventListener('change', function (e)
     var reader = new FileReader();
 
     reader.onloadend = function () {
-        var embed = document.createElement('embed');
-        embed.setAttribute('src', reader.result);
-        embed.setAttribute('width', '100%');
-        embed.setAttribute('height', '100%');
-        embed.style.position = 'absolute';
-        embed.style.zIndex = '-1';
-        document.querySelector('.file-document label').appendChild(embed);
+        //make iframe to display pdf not editable
+        var iframe = document.createElement('iframe');
+        iframe.setAttribute('src', reader.result);
+        iframe.setAttribute('type', 'application/pdf');
+        iframe.setAttribute('width', '100%');
+        iframe.setAttribute('height', '100%');
+        iframe.style.position = 'absolute';
+        iframe.style.zIndex = '-1';
+        document.querySelector('.file-document label').appendChild(iframe);
 
     }
 
