@@ -16,20 +16,30 @@
     </p>
     <!-- education-level  -->
     <div class="education-level">
-        <span>#
-            <?= $request['education_level'] ?>
-        </span>
-        <span>#
-            <?= $request['class_faculty'] ?>
-        </span>
-        <span>#
-            <?= $request['semester'] ?>
-        </span>
+
+        <?php if (isset($request['education_level'])): ?>
+            <span title="Education Level">#
+                <?= $request['education_level'] ?>
+            </span>
+        <?php endif; ?>
+        <?php if (isset($request['class_faculty'])): ?>
+            <span title="Class/Faculty">#
+                <?= $request['class_faculty'] ?>
+            </span>
+        <?php endif; ?>
+        <?php if (isset($request['semester'])): ?>
+            <span title="Semester">#
+                <?= $request['semester'] ?>
+            </span>
+        <?php endif; ?>
     </div>
     <!-- responses  -->
     <div class="no-of-responses">
         <p>Responses</p>
-        <span>0</span>
+        <span>
+            <?= $request['study_material_count'] ?>
+        </span>
+
     </div>
     <!-- document need ( notes, lab reports, question)  -->
     <div class="document-type-needed">

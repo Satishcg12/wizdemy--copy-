@@ -1,5 +1,8 @@
 <?php
-Router::get('/', 'HomeController@index');
+Router::get('/', 'HomeController@notes');
+Router::get('/notes', 'HomeController@notes');
+Router::get('/questions', 'HomeController@questions');
+Router::get('/labreports', 'HomeController@labReports');
 Router::post('/test', function () {
     print_r($_POST);
 });

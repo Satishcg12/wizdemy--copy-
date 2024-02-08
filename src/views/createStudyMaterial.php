@@ -193,10 +193,9 @@ extract($data);
                 </div>
                 <!-- semester (optional) -->
                 <div class="semester">
-                    <label for="semester">Semester (if
-                        applicable)</label>
+                    <label for="semester">Semester (if applicable)</label>
                     <?php if (isset($requestDetail)): ?>
-                        <input type="text" value="<?= htmlspecialchars($requestDetail['semester']) ?>" disabled
+                        <input type="text" value="<?= $requestDetail['semester'] ? htmlspecialchars($requestDetail['semester']) : 'Not Applicable' ?>" disabled
                             name="semester" id="semester">
                     <?php else: ?>
                         <select name="semester" id="semester"

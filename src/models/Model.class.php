@@ -20,6 +20,13 @@ class Model extends Database
         $stmt->execute();
         return $stmt->fetchAll();
     }
+    public function exists($column, $value)
+    {
+        $model = $this;
+        $stmt = $model->pdo->prepare('SELECT * FROM ' . $model->table . ' WHERE ' . $column . ' = :value');
+        $stmt->execute([':value' => $value]);
+        return $stmt->rowCount() > 0;
+    }
     public function select(array $columns)
     {
         $model = $this;
@@ -62,6 +69,25 @@ class Model extends Database
         $model->query .= ' JOIN ' . $table . ' ON ' . $first . ' ' . $operator . ' ' . $second;
         return $model;
     }
+    public function leftJoin($table, $first, $operator, $second)
+    {
+        $model = $this;
+        $model->query .= ' LEFT JOIN ' . $table . ' ON ' . $first . ' ' . $operator . ' ' . $second;
+        return $model;
+    }
+    public function rightJoin($table, $first, $operator, $second)
+    {
+        $model = $this;
+        $model->query .= ' RIGHT JOIN ' . $table . ' ON ' . $first . ' ' . $operator . ' ' . $second;
+        return $model;
+    }
+    public function groupBy($column)
+    {
+        $model = $this;
+        $model->query .= ' GROUP BY ' . $column;
+        return $model;
+    }
+    
     public function orderBy($column, $direction = 'ASC')
     {
         $model = $this;

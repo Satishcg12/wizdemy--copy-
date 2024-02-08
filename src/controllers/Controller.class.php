@@ -1,6 +1,9 @@
 <?php
 
 class Controller{
+    /**
+     * @var Model 
+     */
     protected $model;
 
     protected function __construct($modelName){

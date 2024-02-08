@@ -1,10 +1,4 @@
-<?php
-$studyMaterial = $data['studyMaterial'];
-$views = getStudyMaterialViewCount($studyMaterial['id']);
-$comments = getStudyMaterialCommentCount($studyMaterial['id']);
-$likes = getStudyMaterialLikeCount($studyMaterial['id']);
 
-?>
 <div class="card ">
     <!-- image -->
     <a href="productPage.html" class="thumbnail">
@@ -46,7 +40,7 @@ $likes = getStudyMaterialLikeCount($studyMaterial['id']);
                     </svg>
                 <?php elseif ($studyMaterial['format'] == 'typed'): ?>
                     <!-- keyboard svg -->
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
                         <g id="System / Keyboard">
                             <path id="Vector"
                                 d="M18 15H19M9 15H15M6 15H5M5 12H19M5 9H19M2 14.8002V9.2002C2 8.08009 2 7.51962 2.21799 7.0918C2.40973 6.71547 2.71547 6.40973 3.0918 6.21799C3.51962 6 4.08009 6 5.2002 6H18.8002C19.9203 6 20.4796 6 20.9074 6.21799C21.2837 6.40973 21.5905 6.71547 21.7822 7.0918C22 7.5192 22 8.07899 22 9.19691V14.8031C22 15.921 22 16.48 21.7822 16.9074C21.5905 17.2837 21.2837 17.5905 20.9074 17.7822C20.48 18 19.921 18 18.8031 18H5.19691C4.07899 18 3.5192 18 3.0918 17.7822C2.71547 17.5905 2.40973 17.2837 2.21799 16.9074C2 16.4796 2 15.9203 2 14.8002Z"
@@ -82,9 +76,9 @@ $likes = getStudyMaterialLikeCount($studyMaterial['id']);
         <p class="subject">
             <?= $studyMaterial['subject'] ?> |
 
-            <?= $studyMaterial['education_level'] ?>
-            <?= $studyMaterial['semester'] ?>
-            <?= $studyMaterial['class'] ?> |
+            <?= $studyMaterial['education_level'] ?> 
+            <?= $studyMaterial['semester'] ?> |
+            <?= $studyMaterial['class_faculty'] ?> 
         </p>
         <!-- title  -->
         <h2 class="title">
@@ -103,15 +97,15 @@ $likes = getStudyMaterialLikeCount($studyMaterial['id']);
         </svg>
         <!-- username  -->
         <h3>
-            <?= $studyMaterial['username'] ?>
+            <?= $studyMaterial['user_name'] ?>
         </h3>
     </a>
 
     <!-- time  -->
     <div class="time">
         <a href="profile.html">
-            <span class="time-ago"data-datetime="<?= $studyMaterial['created_at'] ?>"
-            style="font-size: 0.8rem; color: #a0a0a0;"></span>
+            <span class="time-ago" data-datetime="<?= $studyMaterial['created_at'] ?>"
+                style="font-size: 0.8rem; color: #a0a0a0;"></span>
         </a>
         <!-- three dot icon -->
         <button class="three-dot-icon" title="three dot menu" onclick="openThreeDotMenu('<?= $studyMaterial['id'] ?>')">
@@ -135,7 +129,7 @@ $likes = getStudyMaterialLikeCount($studyMaterial['id']);
                 </path>
             </svg>
             <span>
-                <?= $views['data'] ?>
+                <?= $studyMaterial['views_count'] ?>
             </span>
         </div>
         <!-- comments -->
@@ -154,7 +148,7 @@ $likes = getStudyMaterialLikeCount($studyMaterial['id']);
                 </g>
             </svg>
             <span>
-                <?= $comments['data'] ?>
+                <?= $studyMaterial['comments_count'] ?>
             </span>
         </div>
         <!-- likes -->
@@ -164,7 +158,7 @@ $likes = getStudyMaterialLikeCount($studyMaterial['id']);
                     d="M178 28c-20.09 0-37.92 7.93-50 21.56C115.92 35.93 98.09 28 78 28a66.08 66.08 0 0 0-66 66c0 72.34 105.81 130.14 110.31 132.57a12 12 0 0 0 11.38 0C138.19 224.14 244 166.34 244 94a66.08 66.08 0 0 0-66-66m-5.49 142.36a328.69 328.69 0 0 1-44.51 31.8a328.69 328.69 0 0 1-44.51-31.8C61.82 151.77 36 123.42 36 94a42 42 0 0 1 42-42c17.8 0 32.7 9.4 38.89 24.54a12 12 0 0 0 22.22 0C145.3 61.4 160.2 52 178 52a42 42 0 0 1 42 42c0 29.42-25.82 57.77-47.49 76.36" />
             </svg>
             <span>
-                <?= $likes['data'] ?>
+                <?= $studyMaterial['likes_count'] ?>
             </span>
         </div>
     </a>

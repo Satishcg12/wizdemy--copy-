@@ -105,7 +105,6 @@ CREATE TABLE login_history (
 CREATE TABLE views (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
-    
     study_material_id INT NOT NULL,
     ip_address VARCHAR(255) NOT NULL,
     device VARCHAR(255) NOT NULL,

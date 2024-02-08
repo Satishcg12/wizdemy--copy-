@@ -6,12 +6,6 @@ class StudyMaterialController extends Controller
     {
         parent::__construct('StudyMaterial');
     }
-
-    public function index()
-    {
-        $studyMaterials = $this->model->all();
-        $this->view('index', ['studyMaterials' => $studyMaterials]);
-    }
     public function create()
     {
         $requestDetail = null;
@@ -27,28 +21,6 @@ class StudyMaterialController extends Controller
     }
     public function store()
     {
-
-        // -- Create the study_materials table
-        // CREATE TABLE study_materials (
-        //     id INT PRIMARY KEY AUTO_INCREMENT,
-        //     user_id INT NOT NULL,
-        //     respond_to INT,
-        //     title VARCHAR(255) NOT NULL,
-        //     description TEXT,
-        //     document_type VARCHAR(255) NOT NULL,
-        //     format VARCHAR(255) NOT NULL,
-        //     education_level VARCHAR(255) NOT NULL,
-        //     semester VARCHAR(255),
-        //     subject VARCHAR(255) NOT NULL,
-        //     author VARCHAR(255) NOT NULL,
-        //     file_path VARCHAR(255) NOT NULL,
-        //     thumbnail_path VARCHAR(255) NOT NULL,
-        //     class_faculty VARCHAR(255) NOT NULL,
-        //     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        //     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        //     FOREIGN KEY (user_id) REFERENCES users(id),
-        //     FOREIGN KEY (respond_to) REFERENCES study_material_requests(id)
-        // );
         $user_id = $_SESSION['user_id'];
         $respondTo = null;
         $title = $_POST['title'];
@@ -101,7 +73,7 @@ class StudyMaterialController extends Controller
             'education_level' => ['required'],
             'subject' => ['required'],
             'class_faculty' => ['required'],
-            'thumbnail' => ['required', 'image', 'max-size:100000'],
+            'thumbnail' => ['required', 'image', 'max-size:10000000'],
             'document' => ['required', 'file', 'max-size:10000000']
         ]);
 
@@ -110,11 +82,15 @@ class StudyMaterialController extends Controller
                 ToastNotification::error($msg);
             }
             $_SESSION['old'] = $_POST;
-            $this->redirect('/studymaterial/create');
+            if ($respondTo) {
+                $this->redirect('/studymaterial/create?request_id=' . $respondTo);
+            } else {
+                $this->redirect('/studymaterial/create');
+            }
         }
         //upload files
-        $thumbnailPath = File::upload($thumbnail, 'uploads/study-materials/thumbnails');
-        $documentPath = File::upload($document, 'uploads/study-materials/documents');
+        $thumbnailPath = File::upload($thumbnail, 'uploads/study-materials/thumbnails/');
+        $documentPath = File::upload($document, 'uploads/study-materials/documents/');
 
         if (!$thumbnailPath['status'] || !$documentPath['status']) {
             ToastNotification::error("Failed to upload files. ");

@@ -93,8 +93,10 @@ View::renderComponent('SideNav', ['current_page' => 'request']);
             </div>
         <?php else: ?>
             <div class="no-requests">
+                <img src="/src/assets/images/notfound.jpg" alt="No Requests"class='illustration'>
                 <h2>No Requests</h2>
                 <p>There are no requests at the moment</p>
+                <a href="/requests/create" class="btn">Make Request</a>
             </div>
         <?php endif; ?>
 

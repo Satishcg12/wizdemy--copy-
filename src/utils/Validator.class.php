@@ -75,16 +75,17 @@ class Validator
                         if (isset($request[$key])) {
                             $size = $request[$key]['size'];
                             if ($size > $r[1]) {
-                                $errors[] = 'The ' . $key . ' field must be at most ' . $r[1] . ' KB';
+                                $errors[] = 'The ' . $key . ' field must be at most ' . $r[1]/1000000 . ' MB';
                             }
                         }
                         break;
                     case 'min-size':
                         if (isset($request[$key])) {
-                            $size = $r[1];
-                            if ($size < 1000) {
-                                $errors[] = 'The ' . $key . ' field must be at least ' . $size . ' KB';
+                            $size = $request[$key]['size'];
+                            if ($size < $r[1]) {
+                                $errors[] = 'The ' . $key . ' field must be at least ' . $r[1]/1000000 . ' MB';
                             }
+
                         }
                         break;
                     case 'confirmed':

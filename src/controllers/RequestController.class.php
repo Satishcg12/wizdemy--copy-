@@ -7,7 +7,15 @@ class RequestController extends Controller
     }
     public function index()
     {
-        $requests = $this->model->allWithUser();
+        $requests = null;
+        //get all requests with user and study_material joint, arrange by latest, count study_materials
+        $requests = $this->model->select(['study_material_requests.*', 'users.username as user_name', 'COUNT(study_materials.id) as study_material_count'])
+            ->leftJoin('users', 'study_material_requests.user_id', '=', 'users.id')
+            ->leftJoin('study_materials', 'study_material_requests.id', '=', 'study_materials.respond_to')
+            ->groupBy('study_material_requests.id')
+            ->orderBy('study_material_requests.created_at', 'DESC')
+            ->get();
+        // select study_material_requests.*, users.username as user_name, COUNT(study_materials.id) as study_material_count from study_material_requests left join users on study_material_requests.user_id = users.id left join study_materials on study_material_requests.id = study_materials.respond_to group by study_material_requests.id order by study_material_requests.created_at desc
         $this->view('requests', ['requests' => $requests]);
     }
     public function create()
@@ -38,7 +46,7 @@ class RequestController extends Controller
             'description' => ['required', 'min:20', 'max:1000'],
             'document_type' => ['required', 'max:50'],
             'education_level' => ['required', 'max:50'],
-            'semester' => [ 'max:50'],
+            'semester' => ['max:50'],
             'subject' => ['required', 'max:50'],
             'class_faculty' => ['required', 'min:3', 'max:50']
         ]);

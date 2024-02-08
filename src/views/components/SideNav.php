@@ -11,7 +11,7 @@
             <h2 class="menu-section-category">MAIN MENU</h2>
             <ul>
                 <li>
-                    <a href="/" class="menu-links <?php if ($data['current_page'] == 'index') echo 'is-active' ?>">
+                    <a href="/" class="menu-links <?php if ($data['current_page'] == 'notes') echo 'is-active' ?>">
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -35,7 +35,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/questoins" class="menu-links <?php if ($data['current_page'] == 'question') echo 'is-active' ?>">
+                    <a href="/questions" class="menu-links <?php if ($data['current_page'] == 'question') echo 'is-active' ?>">
                         <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
