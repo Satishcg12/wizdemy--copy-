@@ -1,10 +1,13 @@
- <!-- three dot menu popup -->
+<link rel="stylesheet" href="/src/assets/css/threeDotMenu.css">
+<script src="/src/assets/js/threeDotMenu.js" defer></script>
+
+<!-- three dot menu popup -->
  <div id="three-dot-menu" onclick="closeThreeDotMenu()">
         <ul>
-            <input type="hidden" value="">
+            <input type="hidden" value="" id="studyMaterialId">
 
             <!-- copy link -->
-            <li roal="button" onclick="copyLink()">
+            <li roal="button" onclick="copyLink()" id="copyButton">
                 <span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <g fill="none" stroke="currentColor" stroke-width="1.5">

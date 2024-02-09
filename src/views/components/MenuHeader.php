@@ -21,7 +21,8 @@
 
         <?php if (isset($_SESSION['Auth']) && $_SESSION['Auth']): ?>
             <!-- notificaiton button -->
-            <button class="notification-button">
+
+            <button id="notificaiton" onclick="toggleNotificationOverlay()" class="notification-button">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -74,3 +75,8 @@
         </button>
     </div>
 </header>
+<?php
+if (isset($_SESSION['Auth']) && $_SESSION['Auth']) {
+    View::renderComponent('NotificationOverlay');
+}
+View::renderComponent('SearchOverlay');

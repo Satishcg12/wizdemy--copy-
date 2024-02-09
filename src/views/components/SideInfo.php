@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="/src/assets/css/sideInfo.css">
+<script src="/src/assets/js/sideInfo.js" defer></script>
+
 <!-- side info  -->
 <div id="sideInfo">
         <!-- close svg  -->

@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="/src/assets/css/toast.css">
+<script src="/src/assets/js/toast.js" defer></script>
 <!-- toast overlay -->
 <div id="toastModal">
     <ul>

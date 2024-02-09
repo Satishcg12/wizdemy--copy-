@@ -1,7 +1,7 @@
 
 <div class="card ">
     <!-- image -->
-    <a href="productPage.html" class="thumbnail">
+    <a href="/studymaterial/show?id=<?= $studyMaterial['id'] ?>" class="thumbnail">
         <img src="<?= $studyMaterial['thumbnail_path'] ?>" alt="image">
         <div>
             <?php if ($studyMaterial['respond_to']): ?>
@@ -72,7 +72,7 @@
     </a>
 
     <!-- subject  -->
-    <a href="productPage.html">
+    <a href="/studymaterial/show?id=<?= $studyMaterial['id'] ?>">
         <p class="subject">
             <?= $studyMaterial['subject'] ?> |
 
@@ -87,7 +87,7 @@
     </a>
 
     <!-- username  -->
-    <a href="profile.html" class="username">
+    <a href="/profile?id=<?= $studyMaterial['user_id'] ?>" class="username">
         <!-- at icon @  -->
         <svg xmlns="http://www.w3.org/2000/svg" height="14" width="14" fill="currentColor" style="flex-shrink: 0"
             viewBox="0 0 512 512">
@@ -118,7 +118,7 @@
     </div>
 
     <!-- intercation -->
-    <a href="productPage.html" class="intercation">
+    <a href="/studymaterial/show?id=<?= $studyMaterial['id'] ?>" class="intercation">
         <!-- views  -->
         <div class="view">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

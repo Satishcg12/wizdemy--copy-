@@ -74,7 +74,7 @@
                     style="font-size: 0.8rem; color: #a0a0a0;"></span>
             </a></p>
         <!-- three dot icon -->
-        <button class="three-dot-icon" onclick="openThreeDotMenu('<?= $request['id'] ?>')">
+        <button class="three-dot-icon" onclick="openThreeDotMenu('/requests/details?request_id=<?= $request['id'] ?>')">
 
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 24">
                 <path fill="#000"

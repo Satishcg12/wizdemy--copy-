@@ -7,6 +7,7 @@ class HomeController extends Controller
     }
     public function notes()
     {
+        $page = isset($_GET['page']) ? $_GET['page'] : 1;
         // get all notes with user joint, arrange by latest with view ,comments and likes count
         $response = $this->model->select(['study_materials.*', 'users.username as user_name', 'COUNT(views.id) as views_count', 'COUNT(comments.id) as comments_count', 'COUNT(likes.id) as likes_count'])
             ->join('users', 'study_materials.user_id', '=', 'users.id')
@@ -16,24 +17,42 @@ class HomeController extends Controller
             ->where('study_materials.document_type', 'note')
             ->groupBy('study_materials.id')
             ->orderBy('study_materials.created_at', 'DESC')
+            ->limit(10)
+            ->offset(($page - 1) * 10)
             ->get();
         $this->view('notes', ['studyMaterials' => $response]);
     }
     public function questions()
     {
-        $response = $this->model->select(['study_materials.*', 'users.username as user_name'])
+        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+        // get all notes with user joint, arrange by latest with view ,comments and likes count
+        $response = $this->model->select(['study_materials.*', 'users.username as user_name', 'COUNT(views.id) as views_count', 'COUNT(comments.id) as comments_count', 'COUNT(likes.id) as likes_count'])
             ->join('users', 'study_materials.user_id', '=', 'users.id')
-            ->where('study_materials.document_type', 'questions')
+            ->leftJoin('views', 'study_materials.id', '=', 'views.study_material_id')
+            ->leftJoin('comments', 'study_materials.id', '=', 'comments.study_material_id')
+            ->leftJoin('likes', 'study_materials.id', '=', 'likes.study_material_id')
+            ->where('study_materials.document_type', 'question')
+            ->groupBy('study_materials.id')
             ->orderBy('study_materials.created_at', 'DESC')
+            ->limit(10)
+            ->offset(($page - 1) * 10)
             ->get();
         $this->view('questions', ['studyMaterials' => $response]);
     }
     public function labReports()
     {
-        $response = $this->model->select(['study_materials.*', 'users.username as user_name'])
+        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+        // get all notes with user joint, arrange by latest with view ,comments and likes count
+        $response = $this->model->select(['study_materials.*', 'users.username as user_name', 'COUNT(views.id) as views_count', 'COUNT(comments.id) as comments_count', 'COUNT(likes.id) as likes_count'])
             ->join('users', 'study_materials.user_id', '=', 'users.id')
-            ->where('study_materials.document_type', 'lab_reports')
+            ->leftJoin('views', 'study_materials.id', '=', 'views.study_material_id')
+            ->leftJoin('comments', 'study_materials.id', '=', 'comments.study_material_id')
+            ->leftJoin('likes', 'study_materials.id', '=', 'likes.study_material_id')
+            ->where('study_materials.document_type', 'lab report')
+            ->groupBy('study_materials.id')
             ->orderBy('study_materials.created_at', 'DESC')
+            ->limit(10)
+            ->offset(($page - 1) * 10)
             ->get();
         $this->view('labReports', ['studyMaterials' => $response]);
     }

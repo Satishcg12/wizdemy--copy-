@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', function () {
+setInterval(() => {
+
     var toasts = document.querySelectorAll('#toastModal ul li');
     // add toast class to each li after 0.5s delay
     toasts.forEach(function (toast, index) {
@@ -37,8 +38,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }, 100);
         });
     });
-});
 
+
+}, 100);
 // client side toast message
 function toastMessage(message, duration = '3000', type = 'success') {
 

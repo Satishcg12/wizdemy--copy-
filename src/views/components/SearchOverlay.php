@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="/src/assets/css/searchOverlay.css">
+<script src="/src/assets/js/searchOverlay.js" defer></script>
+
 <!-- search overlay  -->
 <div id="searchOverlay" onclick="toggleSearchOverlay()">
 

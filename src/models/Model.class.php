@@ -138,6 +138,10 @@ class Model extends Database
         $query = 'SELECT COUNT(*) FROM ' . $model->table . substr($model->query, strlen('SELECT * FROM ' . $model->table));
         $stmt = $model->pdo->prepare($query);
         $stmt->execute($model->bindings);
+        //clean up
+        $model->query = 'SELECT * FROM ' . $model->table;
+        $model->bindings = [];
+
         return $stmt->fetchColumn();
     }
     public function max($column)
@@ -181,6 +185,9 @@ class Model extends Database
         $query = 'INSERT INTO ' . $model->table . ' (' . $columns . ') VALUES (:' . $values . ')';
         $stmt = $model->pdo->prepare($query);
         $stmt->execute($data);
+        //clean up
+        $model->query = 'SELECT * FROM ' . $model->table;
+        $model->bindings = [];
         return $stmt->rowCount();
     }
     public function update(array $data)
@@ -194,7 +201,22 @@ class Model extends Database
         $query = 'UPDATE ' . $model->table . ' SET ' . $set . substr($model->query, strlen('SELECT * FROM ' . $model->table));
         $stmt = $model->pdo->prepare($query);
         $stmt->execute($data + $model->bindings);
+        //clean up
+        $model->query = 'SELECT * FROM ' . $model->table;
+        $model->bindings = [];
         return $stmt->rowCount();
     }
+    public function delete()
+    {
+        $model = $this;
+        $query = 'DELETE FROM ' . $model->table . substr($model->query, strlen('SELECT * FROM ' . $model->table));
+        $stmt = $model->pdo->prepare($query);
+        $stmt->execute($model->bindings);
+        //clean up
+        $model->query = 'SELECT * FROM ' . $model->table;
+        $model->bindings = [];
+        return $stmt->rowCount();
+    }
+
 
 }

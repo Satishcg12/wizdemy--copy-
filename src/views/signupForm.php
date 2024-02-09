@@ -1,8 +1,7 @@
 <?php
 View::renderComponent('Header', [
   'page_title' => 'Signup - '.SITE_NAME,
-  'stylesheets' => ['authForm','toast'], 
-  'scripts' => ['toast']
+  'stylesheets' => ['authForm']
 ]);
 ?>
   <main class="form">

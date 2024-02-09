@@ -1,5 +1,5 @@
 <?php
-View::renderComponent('Header', ['page_title' => 'Upload - ' . SITE_NAME, 'stylesheets' => ['upload'], 'scripts' => ['jquery.min','toast', 'threeDotMenu', 'sideInfo', 'searchOverlay', 'previewUpload']]);
+View::renderComponent('Header', ['page_title' => 'Upload - ' . SITE_NAME, 'stylesheets' => ['upload'], 'scripts' => ['script','previewUpload']]);
 View::renderComponent('SideNav', ['current_page' => 'none']);
 
 extract($data);
@@ -323,6 +323,5 @@ extract($data);
 </main>
 <?php
 View::renderComponent('ToastNotification');
-View::renderComponent('SearchOverlay');
 View::renderComponent('Footer');
 ?>

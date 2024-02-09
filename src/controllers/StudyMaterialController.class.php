@@ -131,4 +131,102 @@ class StudyMaterialController extends Controller
         ToastNotification::success('Study material created successfully');
         $this->redirect('/studymaterial/create');
     }
+    public function show()
+    {
+        if (!isset($_GET['id'])) {
+            $this->redirect('/404');
+        }
+        $id = $_GET['id'];
+        //get study material with user and view , like , comment count have like
+        $studyMaterial = $this->model->select([
+            'users.username as user_name',
+            'study_materials.*',
+            'COUNT(views.id) as views_count',
+            'COUNT(likes.id) as likes_count',
+            'COUNT(comments.id) as comments_count',
+        ])
+            ->join('users', 'study_materials.user_id', '=', 'users.id')
+            ->leftJoin('views', 'study_materials.id', '=', 'views.study_material_id')
+            ->leftJoin('likes', 'study_materials.id', '=', 'likes.study_material_id')
+            ->leftJoin('comments', 'study_materials.id', '=', 'comments.study_material_id')
+            ->where('study_materials.id', $id)
+            ->groupBy('study_materials.id')
+            ->first();
+
+        $like = false;
+        $bookmark = false;
+        if (isset($_SESSION['user_id'])) {
+            $like = (new Likes())->isLiked($_SESSION['user_id'], $id);
+            $bookmark = (new Bookmarks())->isBookmarked($_SESSION['user_id'], $id);
+        }
+        $studyMaterial['like_status'] = $like;
+        $studyMaterial['bookmark_status'] = $bookmark;
+
+        if (empty($studyMaterial)) {
+            $this->redirect('/404');
+        }
+        $this->view('showStudyMaterial', ['studyMaterial' => $studyMaterial]);
+    }
+    public function edit()
+    {
+        if (!isset($_GET['id'])) {
+            $this->redirect('/404');
+        }
+        $id = $_GET['id'];
+        $studyMaterial = $this->model->find($id);
+        if (empty($studyMaterial)) {
+            $this->redirect('/404');
+        }
+        $this->view('editStudyMaterial', ['studyMaterial' => $studyMaterial]);
+    }
+    public function like()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            $this->json(['status' => 'error', 'msg' => 'You need to login to like']);
+        }
+        if (!isset($_GET['id'])) {
+            $this->redirect('/404');
+        }
+        $id = $_GET['id'];
+        $like = new Likes();
+
+        $like = $like->where('user_id', $_SESSION['user_id'])->where('study_material_id', $id)->first();
+        if ($like) {
+            $like = new Likes();
+            $like->where('user_id', $_SESSION['user_id'])->where('study_material_id', $id)->delete();
+            $likecount = $like->where('study_material_id', $id)->count();
+        } else {
+            $like = new Likes();
+            $like->create([
+                'user_id' => $_SESSION['user_id'],
+                'study_material_id' => $id
+            ]);
+            $likecount = $like->where('study_material_id', $id)->count();
+        }
+        $this->json(['status' => 'success', 'likeCount' => $likecount]);
+    }
+    public function bookmark()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            $this->json(['status' => 'error', 'msg' => 'You need to login to bookmark']);
+        }
+        if (!isset($_GET['id'])) {
+            $this->redirect('/404');
+        }
+        $id = $_GET['id'];
+        $bookmark = new Bookmarks();
+
+        $bookmark = $bookmark->where('user_id', $_SESSION['user_id'])->where('study_material_id', $id)->first();
+        if ($bookmark) {
+            $bookmark = new Bookmarks();
+            $bookmark->where('user_id', $_SESSION['user_id'])->where('study_material_id', $id)->delete();
+        } else {
+            $bookmark = new Bookmarks();
+            $bookmark->create([
+                'user_id' => $_SESSION['user_id'],
+                'study_material_id' => $id
+            ]);
+        }
+        $this->json(['status' => 'success']);
+    }
 }

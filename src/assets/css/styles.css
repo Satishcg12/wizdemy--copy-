@@ -5,7 +5,36 @@
 @import url("cardCategory.css");
 @import url("card.css");
 @import url("threeDotMenu.css");
-@import url('sideInfo.css');
-@import url('searchOverlay.css');
-@import url('toast.css');
 @import url("footer.css");
+
+
+.no-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  width: 100%;
+  font-size: 1.5rem;
+  color: var(--text-color);
+}
+
+.no-data img {
+  width: 10rem;
+    height: 10rem;
+    margin-right: 1rem;
+}
+
+.no-data p {
+  margin-top: 1rem;
+}
+
+.no-data a {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}

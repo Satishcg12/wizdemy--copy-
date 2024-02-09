@@ -1,16 +1,16 @@
 
 const threeDotMenu = document.getElementById('three-dot-menu');
 const threeDotMenuUl = document.querySelector('#three-dot-menu ul');
-const threeDotMenuId = document.querySelector('#three-dot-menu input[type="hidden"]');
+const threeDotMenuId = document.getElementById('studymaterialId');
 const threeDotIcon = document.getElementsByClassName('three-dot-icon');
-const share = document.getElementById('share');
+const copy = document.querySelector('#three-dot-menu #copy');
 
-function openThreeDotMenu(postId) {
+function openThreeDotMenu(url) {
     threeDotMenu.classList.add('open');
     threeDotMenuUl.classList.add('open');
     document.body.classList.add('menu-open');
-    threeDotMenuId.value = postId;
-    share.href = `https:localhost:8000/post/${postId}`;
+    // threeDotMenuId.value = postId;
+    copy.setAttribute('data-clipboard-text', window.location.origin + '/studymaterial/' + postId);
 }
 function closeThreeDotMenu() {
     threeDotMenu.classList.remove('open');

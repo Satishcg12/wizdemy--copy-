@@ -1,11 +1,9 @@
 <?php
-View::renderComponent('Header', ['page_title' => SITE_NAME, 'stylesheets' => ['styles'], 'scripts' => ['script', 'toast', 'threeDotMenu', 'sideInfo', 'searchOverlay', 'parseTimeAgo']]);
+View::renderComponent('Header', ['page_title' => SITE_NAME, 'stylesheets' => ['styles'], 'scripts' => ['script', 'sideInfo', 'parseTimeAgo']]);
 View::renderComponent('SideNav', ['current_page' => 'notes']);
 
 // get the study materials from the controller
 $studyMaterials = $data['studyMaterials'];
-
-
 ?>
 
 <main class="container">
@@ -20,10 +18,13 @@ $studyMaterials = $data['studyMaterials'];
                     <?php View::renderComponent('StudyMaterialCard', ['studyMaterial' => $studyMaterial]) ?>
                 <?php endforeach; ?>
             </div>
-            <?php else: ?>
-                <div class="no-data">
-                    <h1>No Data Found</h1>
-                </div>
+        <?php else: ?>
+            <div class="no-data">
+                <h1>No Data Found</h1>
+                <img src="/public/images/notfound.jpg" alt="No Data">
+                <p>There are no notes available at the moment</p>
+                <a href="/studymaterial/create" class="btn">Upload Note</a>
+            </div>
 
 
         <?php endif; ?>
@@ -32,9 +33,8 @@ $studyMaterials = $data['studyMaterials'];
 </main>
 
 <?php
+
 View::renderComponent('ToastNotification');
-View::renderComponent('SearchOverlay');
-View::renderComponent('SideInfo');
 View::renderComponent('ThreeDotMenu');
 View::renderComponent('Footer');
 

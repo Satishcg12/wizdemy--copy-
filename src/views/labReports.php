@@ -1,6 +1,6 @@
 <?php
 View::renderComponent('Header', ['page_title' => SITE_NAME, 'stylesheets' => ['styles'], 'scripts' => ['script', 'parseTimeAgo']]);
-View::renderComponent('SideNav', ['current_page' => 'question']);
+View::renderComponent('SideNav', ['current_page' => 'labReport']);
 
 // get the study materials from the controller
 $studyMaterials = $data['studyMaterials'];
@@ -18,13 +18,13 @@ $studyMaterials = $data['studyMaterials'];
                     <?php View::renderComponent('StudyMaterialCard', ['studyMaterial' => $studyMaterial]) ?>
                 <?php endforeach; ?>
             </div>
-            <?php else: ?>
-                <div class="no-data">
-                    <h1>No Data Found</h1>
-                    <img src="/src/assets/images/notfound.jpg" alt="No Data">
-                    <p>There are no questions available at the moment</p>
-                    <a href="/studymaterial/create" class="btn">Upload Question</a>
-                </div>
+        <?php else: ?>
+            <div class="no-data">
+                <h1>No Data Found</h1>
+                <img src="/src/assets/images/notfound.jpg" alt="No Data">
+                <p>There are no lab reports available at the moment</p>
+                <a href="/studymaterial/create" class="btn">Upload Lab Report</a>
+            </div>
 
 
         <?php endif; ?>

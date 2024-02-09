@@ -1,6 +1,6 @@
 <?php
 $requests = $data['requests'];
-View::renderComponent('Header', ['page_title' => SITE_NAME, 'stylesheets' => ['request'], 'scripts' => ['script', 'toast', 'threeDotMenu', 'sideInfo', 'searchOverlay','parseTimeAgo']]);
+View::renderComponent('Header', ['page_title' => SITE_NAME, 'stylesheets' => ['request'], 'scripts' => ['script','parseTimeAgo']]);
 View::renderComponent('SideNav', ['current_page' => 'request']);
 
 ?>
@@ -107,7 +107,6 @@ View::renderComponent('SideNav', ['current_page' => 'request']);
 
 <?php
 View::renderComponent('ToastNotification');
-View::renderComponent('SearchOverlay');
 View::renderComponent('SideInfo');
 View::renderComponent('ThreeDotMenu');
 View::renderComponent('Footer');

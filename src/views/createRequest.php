@@ -2,7 +2,7 @@
 View::renderComponent('Header', [
     'page_title' => SITE_NAME,
     'stylesheets' => ['requestForm'],
-    'scripts' => ['script', 'toast', 'searchOverlay']
+    'scripts' => ['script']
 ]);
 View::renderComponent('SideNav', ['current_page' => 'request']);
 
@@ -187,7 +187,6 @@ View::renderComponent('SideNav', ['current_page' => 'request']);
 
 <?php
 View::renderComponent('ToastNotification');
-View::renderComponent('SearchOverlay');
 View::renderComponent('Footer');
 
 ?>

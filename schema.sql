@@ -82,6 +82,16 @@ CREATE TABLE comments (
     FOREIGN KEY (study_material_id) REFERENCES study_materials(id)
 );
 
+-- Create the bookmarks table
+CREATE TABLE bookmarks (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    study_material_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (study_material_id) REFERENCES study_materials(id)
+);
+
 -- Create the reports table
 CREATE TABLE reports (
     id INT PRIMARY KEY AUTO_INCREMENT,
