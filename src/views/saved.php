@@ -1,6 +1,7 @@
+
 <?php
 View::renderComponent('Header', ['page_title' => SITE_NAME, 'stylesheets' => ['styles'], 'scripts' => ['script', 'sideInfo', 'parseTimeAgo']]);
-View::renderComponent('SideNav', ['current_page' => 'notes']);
+View::renderComponent('SideNav', ['current_page' => 'saved']);
 
 // get the study materials from the controller
 $studyMaterials = $data['studyMaterials'];

@@ -323,5 +323,6 @@ extract($data);
 </main>
 <?php
 View::renderComponent('ToastNotification');
+
 View::renderComponent('Footer');
 ?>

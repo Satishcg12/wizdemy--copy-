@@ -139,8 +139,8 @@ View::renderComponent('SideNav', ['current_page' => 'profile']);
                         <p class="message">
                             <?= $user['full_name'] ?> has not uploaded any study materials yet
                         </p>
-                        <a href="/studymaterial/create" class="btn"> 
-                            Upload 
+                        <a href="/studymaterial/create" class="btn">
+                            Upload
                         </a>
                     </div>
                 <?php endif; ?>
@@ -185,7 +185,16 @@ View::renderComponent('SideNav', ['current_page' => 'profile']);
                     </div>
                     <div class="user-type">
                         <p>U/T</p>
-                        <div>S</div>
+                        <div>
+                        
+                            <?php if ($user['user_type'] == 'student'): ?>
+                                S
+                            <?php elseif ($user['user_type'] == 'teacher'): ?>
+                                T
+                            <?php else: ?>
+                                N/A
+                            <?php endif; ?>
+                        </div>
                     </div>
 
                     <div class="year">

@@ -52,15 +52,19 @@ class Model extends Database
     public function andWhere($column, $value, $operator = '=')
     {
         $model = $this;
-        $model->query .= ' AND ' . $column . ' ' . $operator . " :$column ";
-        $model->bindings[":$column"] = $value;
+        $column_param = str_replace('.', '_', $column);
+
+        $model->query .= ' AND ' . $column . ' ' . $operator . " :$column_param ";
+        $model->bindings[":$column_param"] = $value;
         return $model;
     }
     public function orWhere($column, $value, $operator = '=')
     {
         $model = $this;
-        $model->query .= ' OR ' . $column . ' ' . $operator . " :$column ";
-        $model->bindings[":$column"] = $value;
+        $column_param = str_replace('.', '_', $column);
+
+        $model->query .= ' OR ' . $column . ' ' . $operator . " :$column_param ";
+        $model->bindings[":$column_param"] = $value;
         return $model;
     }
     public function join($table, $first, $operator, $second)
@@ -97,6 +101,7 @@ class Model extends Database
     public function limit($limit)
     {
         $model = $this;
+
         $model->query .= ' LIMIT ' . $limit;
         return $model;
     }
@@ -119,6 +124,19 @@ class Model extends Database
 
         return $stmt->fetch();
     }
+    public function union($model)
+    {
+        $this->query .= ' UNION ' . $model->query;
+        $this->bindings = array_merge($this->bindings, $model->bindings);
+        return $this;
+    }
+    public function unionAll($model)
+    {
+        $this->query .= ' UNION ALL ' . $model->query;
+        $this->bindings = array_merge($this->bindings, $model->bindings);
+        return $this;
+    }
+
     public function get()
     {
         $model = $this;
@@ -169,6 +187,8 @@ class Model extends Database
 
         return $stmt->fetch();
     }
+
+
     public function create(array $data)
     {
         $model = $this;
@@ -190,17 +210,25 @@ class Model extends Database
         $model->bindings = [];
         return $stmt->rowCount();
     }
-    public function update(array $data)
+    public function update(array $data, $id)
     {
         $model = $this;
+        //check fillable colums
+        if (count($model->fillable) > 0) {
+            foreach ($data as $key => $value) {
+                if (!in_array($key, $model->fillable)) {
+                    unset($data[$key]);
+                }
+            }
+        }
         $set = '';
         foreach ($data as $key => $value) {
             $set .= $key . ' = :' . $key . ', ';
         }
         $set = rtrim($set, ', ');
-        $query = 'UPDATE ' . $model->table . ' SET ' . $set . substr($model->query, strlen('SELECT * FROM ' . $model->table));
+        $query = 'UPDATE ' . $model->table . ' SET ' . $set . ' WHERE id = :id';
         $stmt = $model->pdo->prepare($query);
-        $stmt->execute($data + $model->bindings);
+        $stmt->execute($data + [':id' => $id]);
         //clean up
         $model->query = 'SELECT * FROM ' . $model->table;
         $model->bindings = [];

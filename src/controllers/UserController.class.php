@@ -25,6 +25,7 @@ class UserController extends Controller
             'users.education_level',
             'users.email',
             'users.private',
+            'users.user_type',
             'COUNT(study_materials.id) as post_count',
         ])
             ->leftJoin('study_materials', 'users.id', '=', 'study_materials.user_id')
@@ -60,4 +61,70 @@ class UserController extends Controller
             'following' => $following
         ]);
     }
+    public function edit()
+    {
+        $user = $this->model->find($_SESSION['user_id']);
+        if (empty($user)) {
+            $this->redirect('/404');
+        }
+        $this->view('editProfile', ['user' => $user]);
+    }
+    public function updateProfileNameBio()
+    {
+        // update user name and bio
+        $data = [
+            'username' => $_POST['username'],
+            'bio' => $_POST['bio']
+        ];
+        $validation = Validator::validate($data, [
+            'username' => ['required', 'min:3', 'max:50'],
+            'bio' => ['max:100']
+        ]);
+        if (!$validation['status']) {
+            foreach ($validation['msg'] as $msg) {
+                ToastNotification::error($msg);
+            }
+            $this->redirect('/profile/edit');
+        }
+        
+        if ($this->model->update($data, $_SESSION['user_id'])) {
+            ToastNotification::success('Profile updated successfully');
+            $this->redirect('/profile/edit');
+        } else {
+            ToastNotification::error($validation['msg']);
+            $this->redirect('/profile/edit');
+        }
+    }
+    public function updatePersonalInfo()
+    {
+        // update user personal info
+        $data = [
+            'full_name' => $_POST['full_name'],
+            'user_type' => $_POST['user_type'],
+            'education_level' => $_POST['education_level'],
+            'enrolled_course' => $_POST['enrolled_course'],
+            'school_name' => $_POST['school_name']
+        ];
+        $validation = Validator::validate($data, [
+            'full_name' => ['required', 'min:3', 'max:50'],
+            'user_type' => ['required'],
+            'education_level' => ['required','min:2', 'max:50'],
+            'enrolled_course' => ['required', 'min:3', 'max:50'],
+            'school_name' => ['required', 'min:3', 'max:50']
+        ]);
+        if (!$validation['status']) {
+            foreach ($validation['msg'] as $msg) {
+                ToastNotification::error($msg);
+            }
+            $this->redirect('/profile/edit');
+        }
+        if ($this->model->update($data, $_SESSION['user_id'])) {
+            ToastNotification::success('Profile updated successfully');
+            $this->redirect('/profile/edit');
+        } else {
+            ToastNotification::error($validation['msg']);
+            $this->redirect('/profile/edit');
+        }
+    }
+
 }

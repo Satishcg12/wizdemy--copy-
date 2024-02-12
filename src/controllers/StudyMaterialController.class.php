@@ -165,6 +165,19 @@ class StudyMaterialController extends Controller
         if (empty($studyMaterial)) {
             $this->redirect('/404');
         }
+
+        // add view
+        // if (isset($_SESSION['user_id'])) {
+        //     $view = new Views();
+        //     $view = $view->where('user_id', $_SESSION['user_id'])->where('study_material_id', $id)->first();
+        //     if (!$view) {
+        //         $view = new Views();
+        //         $view->create([
+        //             'user_id' => $_SESSION['user_id'],
+        //             'study_material_id' => $id
+        //         ]);
+        //     }
+        // }
         $this->view('showStudyMaterial', ['studyMaterial' => $studyMaterial]);
     }
     public function edit()
