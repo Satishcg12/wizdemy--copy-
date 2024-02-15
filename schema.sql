@@ -120,7 +120,7 @@ CREATE TABLE views (
     user_id INT,
     study_material_id INT NOT NULL,
     ip_address VARCHAR(255) NOT NULL,
-    device VARCHAR(255) NOT NULL,
+    user_agent VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (study_material_id) REFERENCES study_materials(id)

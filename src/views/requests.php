@@ -1,6 +1,10 @@
 <?php
 $requests = $data['requests'];
-View::renderComponent('Header', ['page_title' => SITE_NAME, 'stylesheets' => ['request'], 'scripts' => ['script','parseTimeAgo']]);
+View::renderComponent('Header', [
+    'page_title' => SITE_NAME,
+    'stylesheets' => ['request'],
+    'scripts' => ['script', 'parseTimeAgo']
+]);
 View::renderComponent('SideNav', ['current_page' => 'request']);
 
 ?>
@@ -9,7 +13,7 @@ View::renderComponent('SideNav', ['current_page' => 'request']);
 
     <section>
         <!-- if request -->
-        <?php if(isset($requests) && count($requests) > 0): ?>
+        <?php if (isset($requests) && count($requests) > 0): ?>
             <!--card category note, question , labreport -->
             <div class="card-category-wrapper">
                 <div class="card-category">
@@ -86,14 +90,14 @@ View::renderComponent('SideNav', ['current_page' => 'request']);
 
             <!-- card-section  -->
             <div class="request-card-section">
-                <?php foreach($requests as $request): ?>
+                <?php foreach ($requests as $request): ?>
                     <?php View::renderComponent('RequestCard', ['request' => $request]) ?>
-                <?php endforeach; ?>        
-                
+                <?php endforeach; ?>
+
             </div>
         <?php else: ?>
             <div class="no-requests">
-                <img src="/src/assets/images/notfound.jpg" alt="No Requests"class='illustration'>
+                <img src="/src/assets/images/notfound.jpg" alt="No Requests" class='illustration'>
                 <h2>No Requests</h2>
                 <p>There are no requests at the moment</p>
                 <a href="/requests/create" class="btn">Make Request</a>
@@ -101,9 +105,9 @@ View::renderComponent('SideNav', ['current_page' => 'request']);
         <?php endif; ?>
 
 
-            <?php View::renderComponent('foot')?>
-        </section>
-    </main>
+        <?php View::renderComponent('foot') ?>
+    </section>
+</main>
 
 <?php
 View::renderComponent('ToastNotification');

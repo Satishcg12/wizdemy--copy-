@@ -5,7 +5,7 @@ class Views extends Model
     public function __construct()
     {
         parent::__construct('views');
-        $this->fillable = ['user_id', 'study_material_id','ip_address','device'];
+        $this->fillable = ['user_id', 'study_material_id','ip_address','user_agent'];
     }
 
     public function getViewCount($study_material_id)

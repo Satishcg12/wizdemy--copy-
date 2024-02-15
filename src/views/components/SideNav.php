@@ -247,7 +247,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="accountSecurity.html" class="menu-links">
+                                    <a href="/profile/edit/password" class="menu-links">
                                         <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">

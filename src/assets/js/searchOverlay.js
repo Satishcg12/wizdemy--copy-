@@ -22,3 +22,4 @@ function closeSearchOverlay(){
 window.addEventListener('popstate', function (event) {
   closeSearchOverlay();
 });
+

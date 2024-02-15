@@ -69,6 +69,11 @@ class UserController extends Controller
         }
         $this->view('editProfile', ['user' => $user]);
     }
+    public function editPassword()
+    {
+        $user = $this->model->find($_SESSION['user_id']);
+        $this->view('changePassword', ['user' => $user]);
+    }
     public function updateProfileNameBio()
     {
         // update user name and bio
@@ -84,15 +89,15 @@ class UserController extends Controller
             foreach ($validation['msg'] as $msg) {
                 ToastNotification::error($msg);
             }
-            $this->redirect('/profile/edit');
+            $this->redirect('/profile/edit/password');
         }
         
         if ($this->model->update($data, $_SESSION['user_id'])) {
             ToastNotification::success('Profile updated successfully');
-            $this->redirect('/profile/edit');
+            $this->redirect('/profile/edit/password');
         } else {
             ToastNotification::error($validation['msg']);
-            $this->redirect('/profile/edit');
+            $this->redirect('/profile/edit/password');
         }
     }
     public function updatePersonalInfo()
@@ -116,15 +121,73 @@ class UserController extends Controller
             foreach ($validation['msg'] as $msg) {
                 ToastNotification::error($msg);
             }
-            $this->redirect('/profile/edit');
+            $this->redirect('/profile/edit/password');
         }
         if ($this->model->update($data, $_SESSION['user_id'])) {
             ToastNotification::success('Profile updated successfully');
-            $this->redirect('/profile/edit');
+            $this->redirect('/profile/edit/password');
         } else {
             ToastNotification::error($validation['msg']);
-            $this->redirect('/profile/edit');
+            $this->redirect('/profile/edit/password');
+        }
+    }
+    public function updatePassword()
+    {
+        // print_r($_POST);
+        // die();
+        // update user password
+        $data = [
+            'password' => $_POST['password'],
+            'new_password' => $_POST['new_password'],
+            'confirm_password' => $_POST['confirm_password']
+        ];
+        $validation = Validator::validate($data, [
+            'password' => ['required'],
+            'new_password' => ['required', 'min:8', 'max:50'],
+            'confirm_password' => ['required', 'min:8', 'max:50']
+        ]);
+        if (!$validation['status']) {
+            foreach ($validation['msg'] as $msg) {
+                ToastNotification::error($msg);
+            }
+            $this->redirect('/profile/edit/password');
+        }
+        $user = $this->model->find($_SESSION['user_id']);
+        if (!password_verify($data['password'], $user['password'])) {
+            ToastNotification::error('Old password is incorrect');
+            $this->redirect('/profile/edit/password');
+        }
+        if ($data['new_password'] != $data['confirm_password']) {
+            ToastNotification::error('New password and confirm password does not match');
+            $this->redirect('/profile/edit/password');
+        }
+        if ($this->model->update(['password' => password_hash($data['new_password'], PASSWORD_DEFAULT)], $_SESSION['user_id'])) {
+            ToastNotification::success('Password updated successfully');
+            $this->redirect('/profile/edit/password');
+        } else {
+            ToastNotification::error('Something went wrong');
+            $this->redirect('/profile/edit/password');
         }
     }
 
+    public function private()
+    {   
+        if (!isset($_POST['private'])) {
+            $status = 0;
+        }else{
+            $status = $_POST['private'] == 'on' ? 1 : 0;
+        }
+
+        $data = [
+            'private' => $status
+        ];
+        if ($this->model->update($data, $_SESSION['user_id'])) {
+            ToastNotification::success('Profile updated successfully');
+            $this->redirect('/profile/edit/password');
+        } else {
+            ToastNotification::error('Something went wrong');
+            $this->redirect('/profile/edit/password');
+        }
+        
+    }
 }

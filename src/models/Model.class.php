@@ -111,6 +111,13 @@ class Model extends Database
         $model->query .= ' OFFSET ' . $offset;
         return $model;
     }
+    public function like($column, $value)
+    {
+        $model = $this;
+        $model->query .= ' WHERE ' . $column . ' LIKE :value';
+        $model->bindings[':value'] = $value;
+        return $model;
+    }
     public function first()
     {
         $model = $this;
@@ -213,13 +220,9 @@ class Model extends Database
     public function update(array $data, $id)
     {
         $model = $this;
-        //check fillable colums
+        //check fillable colums if exists
         if (count($model->fillable) > 0) {
-            foreach ($data as $key => $value) {
-                if (!in_array($key, $model->fillable)) {
-                    unset($data[$key]);
-                }
-            }
+            $data=array_intersect_key($data, array_flip($model->fillable));
         }
         $set = '';
         foreach ($data as $key => $value) {

@@ -136,7 +136,18 @@ class StudyMaterialController extends Controller
         if (!isset($_GET['id'])) {
             $this->redirect('/404');
         }
+        
         $id = $_GET['id'];
+        if (!isset($_COOKIE['view_' . $id])) {
+            $view = new Views();
+            $view->create([
+                'user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null,
+                'ip_address' => $_SERVER['REMOTE_ADDR'],
+                'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+                'study_material_id' => $id
+            ]);
+            setcookie('view_' . $id, '1', time() + 60 * 60 * 12, '/'); // 12 hours
+        }
         //get study material with user and view , like , comment count have like
         $studyMaterial = $this->model->select([
             'users.username as user_name',
@@ -155,29 +166,27 @@ class StudyMaterialController extends Controller
 
         $like = false;
         $bookmark = false;
+        $comments = (new Comments())
+            ->select(['comments.*', 'users.username as user_name'])
+            ->join('users', 'comments.user_id', '=', 'users.id')
+            ->where('comments.study_material_id', $id)
+            ->orderBy('comments.created_at', 'DESC')
+            ->get();
+            
         if (isset($_SESSION['user_id'])) {
             $like = (new Likes())->isLiked($_SESSION['user_id'], $id);
             $bookmark = (new Bookmarks())->isBookmarked($_SESSION['user_id'], $id);
+
         }
         $studyMaterial['like_status'] = $like;
         $studyMaterial['bookmark_status'] = $bookmark;
+        $studyMaterial['comments'] = $comments;
 
         if (empty($studyMaterial)) {
             $this->redirect('/404');
         }
 
-        // add view
-        // if (isset($_SESSION['user_id'])) {
-        //     $view = new Views();
-        //     $view = $view->where('user_id', $_SESSION['user_id'])->where('study_material_id', $id)->first();
-        //     if (!$view) {
-        //         $view = new Views();
-        //         $view->create([
-        //             'user_id' => $_SESSION['user_id'],
-        //             'study_material_id' => $id
-        //         ]);
-        //     }
-        // }
+        
         $this->view('showStudyMaterial', ['studyMaterial' => $studyMaterial]);
     }
     public function edit()
@@ -192,54 +201,5 @@ class StudyMaterialController extends Controller
         }
         $this->view('editStudyMaterial', ['studyMaterial' => $studyMaterial]);
     }
-    public function like()
-    {
-        if (!isset($_SESSION['user_id'])) {
-            $this->json(['status' => 'error', 'msg' => 'You need to login to like']);
-        }
-        if (!isset($_GET['id'])) {
-            $this->redirect('/404');
-        }
-        $id = $_GET['id'];
-        $like = new Likes();
 
-        $like = $like->where('user_id', $_SESSION['user_id'])->where('study_material_id', $id)->first();
-        if ($like) {
-            $like = new Likes();
-            $like->where('user_id', $_SESSION['user_id'])->where('study_material_id', $id)->delete();
-            $likecount = $like->where('study_material_id', $id)->count();
-        } else {
-            $like = new Likes();
-            $like->create([
-                'user_id' => $_SESSION['user_id'],
-                'study_material_id' => $id
-            ]);
-            $likecount = $like->where('study_material_id', $id)->count();
-        }
-        $this->json(['status' => 'success', 'likeCount' => $likecount]);
-    }
-    public function bookmark()
-    {
-        if (!isset($_SESSION['user_id'])) {
-            $this->json(['status' => 'error', 'msg' => 'You need to login to bookmark']);
-        }
-        if (!isset($_GET['id'])) {
-            $this->redirect('/404');
-        }
-        $id = $_GET['id'];
-        $bookmark = new Bookmarks();
-
-        $bookmark = $bookmark->where('user_id', $_SESSION['user_id'])->where('study_material_id', $id)->first();
-        if ($bookmark) {
-            $bookmark = new Bookmarks();
-            $bookmark->where('user_id', $_SESSION['user_id'])->where('study_material_id', $id)->delete();
-        } else {
-            $bookmark = new Bookmarks();
-            $bookmark->create([
-                'user_id' => $_SESSION['user_id'],
-                'study_material_id' => $id
-            ]);
-        }
-        $this->json(['status' => 'success']);
-    }
 }

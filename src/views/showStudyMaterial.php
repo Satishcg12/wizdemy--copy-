@@ -305,8 +305,7 @@ View::renderComponent('SideNav');
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <!-- bookmark -->
                     <button class="bookmark <?= $studyMaterial['bookmark_status'] ? 'active' : '' ?>"
-                        onclick="bookmarkStudyMaterial(<?= $studyMaterial['id'] ?>)"
-                        id="bookmark-button">
+                        onclick="bookmarkStudyMaterial(<?= $studyMaterial['id'] ?>)" id="bookmark-button">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path fill="none" stroke="currentColor" stroke-width="2"
                                 d="M4 9c0-2.828 0-4.243.879-5.121C5.757 3 7.172 3 10 3h4c2.828 0 4.243 0 5.121.879C20 4.757 20 6.172 20 9v6.828c0 2.683 0 4.024-.844 4.435c-.845.41-1.9-.419-4.01-2.076l-.675-.531c-1.186-.932-1.78-1.398-2.471-1.398c-.692 0-1.285.466-2.471 1.398l-.676.53c-2.11 1.658-3.164 2.487-4.009 2.077C4 19.853 4 18.51 4 15.828z" />
@@ -326,7 +325,7 @@ View::renderComponent('SideNav');
 
 
         <!--write comments form  -->
-        <form class="comment-form">
+        <form class="comment-form" action="/studymaterial/comment?id=<?= $studyMaterial['id'] ?>" method="post">
             <label for="comment"><span>Write a comment : </span>
                 <div>
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -343,7 +342,9 @@ View::renderComponent('SideNav');
                             </path>
                         </g>
                     </svg>
-                    <span>25</span>
+                    <span>
+                        <?= $studyMaterial['comments_count'] ?>
+                    </span>
                 </div>
             </label>
             <textarea required id="comment" name="comment" rows="2"></textarea>
@@ -356,108 +357,43 @@ View::renderComponent('SideNav');
             </button>
         </form>
 
-
+        <?php print_r($studyMaterial['comments']); ?>
         <!-- comments section  -->
         <div class="comment-section">
-            <!-- comment 1  -->
-            <div class="comment">
-                <!-- username  -->
-                <a href="profile.html" class="username">
-                    <!-- at icon @  -->
-                    <svg xmlns="http://www.w3.org/2000/svg" height="14" width="14" fill="currentColor"
-                        style="flex-shrink: 0" viewBox="0 0 512 512">
-                        <path
-                            d="M256 64C150 64 64 150 64 256s86 192 192 192c17.7 0 32 14.3 32 32s-14.3 32-32 32C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256v32c0 53-43 96-96 96c-29.3 0-55.6-13.2-73.2-33.9C320 371.1 289.5 384 256 384c-70.7 0-128-57.3-128-128s57.3-128 128-128c27.9 0 53.7 8.9 74.7 24.1c5.7-5 13.1-8.1 21.3-8.1c17.7 0 32 14.3 32 32v80 32c0 17.7 14.3 32 32 32s32-14.3 32-32V256c0-106-86-192-192-192zm64 192a64 64 0 1 0 -128 0 64 64 0 1 0 128 0z">
-                        </path>
-                    </svg>
+            <?php foreach ($studyMaterial['comments'] as $comment): ?>
+                <div class="comment">
                     <!-- username  -->
-                    <h3>An Apple</h3>
-                </a>
-                <!-- time  -->
-                <div class="time">
-                    <p><a href="profile.html">1 hour Ago</a></p>
-                    <!-- three dot icon -->
-                    <button class="three-dot-icon" onclick="openThreeDotMenu('2')">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 24">
-                            <path fill="#000"
-                                d="M5.217 12a2.608 2.608 0 1 1-5.216 0a2.608 2.608 0 0 1 5.216 0m0-9.392a2.608 2.608 0 1 1-5.216 0a2.608 2.608 0 0 1 5.216 0m0 18.783a2.608 2.608 0 1 1-5.216 0a2.608 2.608 0 0 1 5.216 0" />
+                    <a href="profile.html" class="username">
+                        <!-- at icon @  -->
+                        <svg xmlns="http://www.w3.org/2000/svg" height="14" width="14" fill="currentColor"
+                            style="flex-shrink: 0" viewBox="0 0 512 512">
+                            <path
+                                d="M256 64C150 64 64 150 64 256s86 192 192 192c17.7 0 32 14.3 32 32s-14.3 32-32 32C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256v32c0 53-43 96-96 96c-29.3 0-55.6-13.2-73.2-33.9C320 371.1 289.5 384 256 384c-70.7 0-128-57.3-128-128s57.3-128 128-128c27.9 0 53.7 8.9 74.7 24.1c5.7-5 13.1-8.1 21.3-8.1c17.7 0 32 14.3 32 32v80 32c0 17.7 14.3 32 32 32s32-14.3 32-32V256c0-106-86-192-192-192zm64 192a64 64 0 1 0 -128 0 64 64 0 1 0 128 0z">
+                            </path>
                         </svg>
-                    </button>
+                        <!-- username  -->
+                        <h3>
+                            <?= $comment['user_name'] ?>
+                        </h3>
+                    </a>
+                    <!-- time  -->
+                    <div class="time">
+                        <span class="time-ago" data-datetime="<?= $comment['created_at'] ?>"
+                            style="font-size: 0.8rem; color: #a0a0a0;"></span>
+                        <!-- three dot icon -->
+                        <button class="three-dot-icon" onclick="openThreeDotMenu('<?= $comment['id'] ?>')">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 24">
+                                <path fill="#000"
+                                    d="M5.217 12a2.608 2.608 0 1 1-5.216 0a2.608 2.608 0 0 1 5.216 0m0-9.392a2.608 2.608 0 1 1-5.216 0a2.608 2.608 0 0 1 5.216 0m0 18.783a2.608 2.608 0 1 1-5.216 0a2.608 2.608 0 0 1 5.216 0" />
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- comment  -->
+                    <p class="comment-content">
+                        <?= $comment['comment'] ?>
+                    </p>
                 </div>
-                <!-- comment  -->
-                <p class="comment-content">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum. Lorem ipsum dolor
-                    sit amet consectetur adipisicing elit. Debitis quod, fugiat consequuntur ullam veniam at maxime
-                    hic doloremque quas voluptas et dolorem eum inventore optio exercitationem eaque ipsum, id
-                    ratione? Nobis tempore eos nemo molestiae accusantium, deleniti aliquid provident magni?
-                </p>
-            </div>
-            <!-- comment 2  -->
-            <div class="comment">
-                <!-- username  -->
-                <a href="profile.html" class="username">
-                    <!-- at icon @  -->
-                    <svg xmlns="http://www.w3.org/2000/svg" height="14" width="14" fill="currentColor"
-                        style="flex-shrink: 0" viewBox="0 0 512 512">
-                        <path
-                            d="M256 64C150 64 64 150 64 256s86 192 192 192c17.7 0 32 14.3 32 32s-14.3 32-32 32C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256v32c0 53-43 96-96 96c-29.3 0-55.6-13.2-73.2-33.9C320 371.1 289.5 384 256 384c-70.7 0-128-57.3-128-128s57.3-128 128-128c27.9 0 53.7 8.9 74.7 24.1c5.7-5 13.1-8.1 21.3-8.1c17.7 0 32 14.3 32 32v80 32c0 17.7 14.3 32 32 32s32-14.3 32-32V256c0-106-86-192-192-192zm64 192a64 64 0 1 0 -128 0 64 64 0 1 0 128 0z">
-                        </path>
-                    </svg>
-                    <!-- username  -->
-                    <h3>An Apple</h3>
-                </a>
-                <!-- time  -->
-                <div class="time">
-                    <p><a href="profile.html">1 hour Ago</a></p>
-                    <!-- three dot icon -->
-                    <button class="three-dot-icon" onclick="openThreeDotMenu('2')">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 24">
-                            <path fill="#000"
-                                d="M5.217 12a2.608 2.608 0 1 1-5.216 0a2.608 2.608 0 0 1 5.216 0m0-9.392a2.608 2.608 0 1 1-5.216 0a2.608 2.608 0 0 1 5.216 0m0 18.783a2.608 2.608 0 1 1-5.216 0a2.608 2.608 0 0 1 5.216 0" />
-                        </svg>
-                    </button>
-                </div>
-                <!-- comment  -->
-                <p class="comment-content">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum. Lorem ipsum dolor
-                    sit amet consectetur adipisicing elit. Debitis quod, fugiat consequuntur ullam veniam at maxime
-                    hic doloremque quas voluptas et dolorem eum inventore optio exercitationem eaque ipsum, id
-                    ratione? Nobis tempore eos nemo molestiae accusantium, deleniti aliquid provident magni?
-                </p>
-            </div>
-            <!-- comment 3  -->
-            <div class="comment">
-                <!-- username  -->
-                <a href="profile.html" class="username">
-                    <!-- at icon @  -->
-                    <svg xmlns="http://www.w3.org/2000/svg" height="14" width="14" fill="currentColor"
-                        style="flex-shrink: 0" viewBox="0 0 512 512">
-                        <path
-                            d="M256 64C150 64 64 150 64 256s86 192 192 192c17.7 0 32 14.3 32 32s-14.3 32-32 32C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256v32c0 53-43 96-96 96c-29.3 0-55.6-13.2-73.2-33.9C320 371.1 289.5 384 256 384c-70.7 0-128-57.3-128-128s57.3-128 128-128c27.9 0 53.7 8.9 74.7 24.1c5.7-5 13.1-8.1 21.3-8.1c17.7 0 32 14.3 32 32v80 32c0 17.7 14.3 32 32 32s32-14.3 32-32V256c0-106-86-192-192-192zm64 192a64 64 0 1 0 -128 0 64 64 0 1 0 128 0z">
-                        </path>
-                    </svg>
-                    <!-- username  -->
-                    <h3>An Apple</h3>
-                </a>
-                <!-- time  -->
-                <div class="time">
-                    <p><a href="profile.html">1 hour Ago</a></p>
-                    <!-- three dot icon -->
-                    <button class="three-dot-icon" onclick="openThreeDotMenu('2')">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 24">
-                            <path fill="#000"
-                                d="M5.217 12a2.608 2.608 0 1 1-5.216 0a2.608 2.608 0 0 1 5.216 0m0-9.392a2.608 2.608 0 1 1-5.216 0a2.608 2.608 0 0 1 5.216 0m0 18.783a2.608 2.608 0 1 1-5.216 0a2.608 2.608 0 0 1 5.216 0" />
-                        </svg>
-                    </button>
-                </div>
-                <!-- comment  -->
-                <p class="comment-content">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum. Lorem ipsum dolor
-                    sit amet consectetur adipisicing elit. Debitis quod, fugiat consequuntur ullam veniam at maxime
-                    hic doloremque quas voluptas et dolorem eum inventore optio exercitationem eaque ipsum, id
-                    ratione? Nobis tempore eos nemo molestiae accusantium, deleniti aliquid provident magni?
-                </p>
-            </div>
+            <?php endforeach; ?>
         </div>
 
 
