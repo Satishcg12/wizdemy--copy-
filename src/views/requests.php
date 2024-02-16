@@ -3,7 +3,7 @@ $requests = $data['requests'];
 View::renderComponent('Header', [
     'page_title' => SITE_NAME,
     'stylesheets' => ['request'],
-    'scripts' => ['script', 'parseTimeAgo']
+    'scripts' => ['jquery.min','script', 'parseTimeAgo','request']
 ]);
 View::renderComponent('SideNav', ['current_page' => 'request']);
 
@@ -18,7 +18,7 @@ View::renderComponent('SideNav', ['current_page' => 'request']);
             <div class="card-category-wrapper">
                 <div class="card-category">
                     <!-- notes -->
-                    <a href="#" class="note-category">
+                    <button onclick="showRequest()" class="note-category">
                         <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -34,9 +34,9 @@ View::renderComponent('SideNav', ['current_page' => 'request']);
                                     fill="currentColor"></path>
                             </g>
                         </svg>Notes
-                    </a>
+                    </button>
                     <!-- question -->
-                    <a href="#" class="question-category">
+                    <button onclick="showRequest('question')" class="question-category">
                         <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -55,9 +55,9 @@ View::renderComponent('SideNav', ['current_page' => 'request']);
                                     fill="currentColor"></path>
                             </g>
                         </svg>Questions
-                    </a>
+                    </button>
                     <!-- labreport -->
-                    <a href="#" class="labreport-category">
+                    <button onclick="showRequest('labreport')" class="labreport-category">
                         <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -70,7 +70,7 @@ View::renderComponent('SideNav', ['current_page' => 'request']);
                                     fill="currentColor"></path>
                             </g>
                         </svg>Lab Reports
-                    </a>
+                    </button>
                 </div>
                 <!-- search icon -->
                 <div class="search-button">

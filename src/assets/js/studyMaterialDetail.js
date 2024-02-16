@@ -4,6 +4,8 @@ function likeStudyMaterial(id) {
         url: url,
         type: 'post',
         success: function (response) {
+            console.log(response);
+            
             if (response.status == 'success') {
                 // update like count
                 $('#likeCount').text(response.likeCount);

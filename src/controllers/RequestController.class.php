@@ -12,6 +12,7 @@ class RequestController extends Controller
         $requests = $this->model->select(['study_material_requests.*', 'users.username as user_name', 'COUNT(study_materials.id) as study_material_count'])
             ->leftJoin('users', 'study_material_requests.user_id', '=', 'users.id')
             ->leftJoin('study_materials', 'study_material_requests.id', '=', 'study_materials.respond_to')
+            ->where('study_material_requests.document_type', 'note')            
             ->groupBy('study_material_requests.id')
             ->orderBy('study_material_requests.created_at', 'DESC')
             ->get();
@@ -85,5 +86,56 @@ class RequestController extends Controller
     {
         $studyMaterial = $this->model->find($id);
         $this->view('edit', ['studyMaterial' => $studyMaterial]);
+    }
+    public function catagory()
+    {
+        $category = $_GET['category'] ?? '';
+
+        switch ($category) {
+            case 'question':
+                $requests = $this->model->select(['study_material_requests.*', 'users.username as user_name', 'COUNT(study_materials.id) as study_material_count'])
+                    ->leftJoin('users', 'study_material_requests.user_id', '=', 'users.id')
+                    ->leftJoin('study_materials', 'study_material_requests.id', '=', 'study_materials.respond_to')
+                    ->where('study_material_requests.document_type', 'question')
+                    ->groupBy('study_material_requests.id')
+                    ->orderBy('study_material_requests.created_at', 'DESC')
+                    ->get();
+                $this->json([
+                    'status' => 'success',
+                    "data" => $requests
+                ]);
+
+                break;
+            case 'labreport':
+                $requests = $this->model->select(['study_material_requests.*', 'users.username as user_name', 'COUNT(study_materials.id) as study_material_count'])
+                    ->leftJoin('users', 'study_material_requests.user_id', '=', 'users.id')
+                    ->leftJoin('study_materials', 'study_material_requests.id', '=', 'study_materials.respond_to')
+                    ->where('study_material_requests.document_type', 'lab report')
+                    ->groupBy('study_material_requests.id')
+                    ->orderBy('study_material_requests.created_at', 'DESC')
+                    ->get();
+                $this->json([
+                    'status' => 'success',
+                    "data" => $requests
+                ]);
+
+                break;
+
+            default:
+                $requests = $this->model->select(['study_material_requests.*', 'users.username as user_name', 'COUNT(study_materials.id) as study_material_count'])
+                    ->leftJoin('users', 'study_material_requests.user_id', '=', 'users.id')
+                    ->leftJoin('study_materials', 'study_material_requests.id', '=', 'study_materials.respond_to')
+                    ->where('study_material_requests.document_type', 'note')
+                    ->groupBy('study_material_requests.id')
+                    ->orderBy('study_material_requests.created_at', 'DESC')
+                    ->get();
+                $this->json([
+                    'status' => 'success',
+                    "data" => $requests
+                ]);
+
+                break;
+                break;
+        }
     }
 }

@@ -25,6 +25,7 @@ Router::post('/profile/edit/namebio', 'UserController@updateProfileNameBio', 'Au
 Router::post('/profile/edit/info', 'UserController@updatePersonalInfo', 'AuthMiddleware');
 
 Router::get('/requests', 'RequestController@index');
+Router::post('/requests', 'RequestController@catagory');
 Router::get('/requests/create', 'RequestController@create', 'AuthMiddleware');
 Router::post('/requests/store', 'RequestController@store', ['AuthMiddleware','CSRFMiddleware']);
 
@@ -33,6 +34,7 @@ Router::get('/studymaterial/create', 'StudyMaterialController@create', 'AuthMidd
 Router::post('/studymaterial/store', 'StudyMaterialController@store', 'AuthMiddleware');
 
 
-Router::post('/studymaterial/like', 'LikeController@like', 'AuthMiddleware');
+Router::post('/studymaterial/like', 'LikeController@like');
 Router::post('/studymaterial/bookmark', 'BookmarkController@bookmark', 'AuthMiddleware');
 Router::post('/studymaterial/comment', 'CommentController@create', 'AuthMiddleware');
+
