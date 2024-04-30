@@ -136,7 +136,6 @@ class StudyMaterialModel extends Model
         return $this->baseQuery()
             ->where('(
                 m.material_id = :material_id
-            AND m.status <> :status
             AND u1.status <> :status
             AND u1.deleted_at IS NULL)
             ')
