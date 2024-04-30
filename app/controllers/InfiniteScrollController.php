@@ -19,7 +19,7 @@ class InfiniteScrollController extends Controller
         }else if($pageName == 'note' || $pageName == 'question' || $pageName == 'labreport'){
             $data = $this->model->show( $pageName, $pageNumber);
         }
-        sleep(1);
+        // sleep(1);
         if($data){
             $this->buildJsonResponse($data);
         }else{

@@ -30,7 +30,7 @@ async function updateStatus(targetType, targetId, element) {
   }
 
   makeAjaxCall(
-    "PUT",
+    "POST",
     `/api/admin/update/status/${targetType}/${targetId}/${status}`,
    function (response) {
  
@@ -59,7 +59,7 @@ async function deleteData(targetType, targetId, element) {
   }
 
   makeAjaxCall(
-    "DELETE",
+    "POST",
     `/api/admin/delete/${targetType}/${targetId}`,
     function (response) {
       if (response.status == 200) {
@@ -82,7 +82,7 @@ async function restoreData(targetType, targetId, element) {
   }
 
   makeAjaxCall(
-    "PUT",
+    "POST",
     `/api/admin/restore/${targetType}/${targetId}`,
     function (response) {
       if (response.status == 200) {

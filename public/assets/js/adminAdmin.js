@@ -47,7 +47,7 @@ async function deleteUser(adminId, element) {
     return false;
   }
   $.ajax({
-    type: "DELETE",
+    type: "POST",
     url: "/api/admin/delete/admin/" + adminId,
     success: function (response) {
       if (response.status == 200) {

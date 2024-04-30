@@ -10,7 +10,8 @@ class GetInfoController extends Controller
 
   public function getInfo($targetType, $targetId)
   {
-    sleep(2); // to simluate spinner in frontend
+    // sleep(2);
+     // to simluate spinner in frontend
     
     
     if (!in_array($targetType, ['material', 'request', 'project'])) {

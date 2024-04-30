@@ -46,7 +46,7 @@ $router->post('/material/edit/{material_id}', 'UploadController@edit')->only('au
 $router->put('/material/update/{material_id}', 'UploadController@update')->only('auth');
 
 //routes for delete material
-$router->delete('/api/material/delete/{material_id}', 'UploadController@delete')->only('apiAuth');
+$router->post('/api/material/delete/{material_id}', 'UploadController@delete')->only('apiAuth');
 
 
 //routes for edit of request
@@ -55,7 +55,7 @@ $router->post('/request/edit/{request_id}', 'RequestController@edit')->only('aut
 $router->put('/request/update/{material_id}', 'RequestController@update')->only('auth');
 
 //routes for delete request
-$router->delete('/api/request/delete/{request_id}', 'RequestController@delete')->only('apiAuth');
+$router->post('/api/request/delete/{request_id}', 'RequestController@delete')->only('apiAuth');
 
 //routes for project page
 $router->get('/project', 'ProjectController@index')->only('auth');
@@ -70,7 +70,7 @@ $router->post('/project/edit/{project_id}', 'ProjectController@edit')->only('aut
 $router->put('/project/update/{project_id}', 'ProjectController@update')->only('auth');
 
 //routes for delete project
-$router->delete('/api/project/delete/{project_id}', 'ProjectController@delete')->only('apiAuth');
+$router->post('/api/project/delete/{project_id}', 'ProjectController@delete')->only('apiAuth');
 
 //routes for report page
 // $router->get('/report', 'ReportController@index')->only('auth');
@@ -97,16 +97,16 @@ $router->post('/api/profile/myProjects', 'ProfileController@myProjects')->only('
 //routes for like study material
 $router->get('/like', 'LikeController@index')->only('auth');
 $router->post('/api/material/like/{material_id}', 'LikeController@like')->only('apiAuth');
-$router->delete('/api/material/unlike/{material_id}', 'LikeController@unlike')->only('apiAuth');
+$router->post('/api/material/unlike/{material_id}', 'LikeController@unlike')->only('apiAuth');
 
 //routes for bookmark page
 $router->get('/bookmark', 'BookmarkController@index')->only('auth');
 $router->post('/api/material/bookmark/{material_id}', 'BookmarkController@bookmark')->only('apiAuth');
-$router->delete('/api/material/unbookmark/{material_id}', 'BookmarkController@unbookmark')->only('apiAuth');
+$router->post('/api/material/unbookmark/{material_id}', 'BookmarkController@unbookmark')->only('apiAuth');
 
 //routes for comment
 $router->post('/api/material/comment/{material_id}', 'CommentController@addComment')->only('apiAuth');
-$router->delete('/api/material/comment/{comment_id}', 'CommentController@deleteComment')->only('apiAuth');
+$router->post('/api/material/comment/{comment_id}', 'CommentController@deleteComment')->only('apiAuth');
 
 //routes for infos 
 $router->get('/api/info/{targetType}/{targetId}', 'GetInfoController@getInfo');
@@ -166,14 +166,14 @@ $router->get('/admin/myLog', 'AdminHomeController@myLog')->only('admin');
 $router->get('/admin/view/{targetType}/{targetId}', 'AdminHomeController@view')->only('admin');
 
 // api for update status
-$router->put('/api/admin/update/status/{targetType}/{targetId}/{status}', 'AdminHomeController@updateStatus')->only('apiAdmin');
+$router->post('/api/admin/update/status/{targetType}/{targetId}/{status}', 'AdminHomeController@updateStatus')->only('apiAdmin');
 
 // api for delete
-$router->delete('/api/admin/delete/{targetType}/{targetId}', 'AdminHomeController@delete')->only('apiAdmin');
+$router->post('/api/admin/delete/{targetType}/{targetId}', 'AdminHomeController@delete')->only('apiAdmin');
 
 //restore deleted user / admins 
 $router->get('/admin/restore/{targetType}', 'AdminHomeController@restore')->only('admin');
-$router->put('/api/admin/restore/{targetType}/{targetId}', 'AdminHomeController@restoreProcess')->only('apiAdmin');
+$router->post('/api/admin/restore/{targetType}/{targetId}', 'AdminHomeController@restoreProcess')->only('apiAdmin');
 
 //routes for admin manage report
 $router->get('/admin/manage/report', 'AdminManageReportController@index')->only('admin');

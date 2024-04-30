@@ -17,7 +17,8 @@ class Session
   public static function start()
   {
     // session_start([
-    //     'cookie_lifetime' => 3600,
+    //   //1 minute = 60 seconds
+    //     'cookie_lifetime' => 30,
     //     'cookie_httponly' => true,
     //     'cookie_secure' => true,
     //     'cookie_samesite' => 'Strict'

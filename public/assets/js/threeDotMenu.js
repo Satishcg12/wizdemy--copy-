@@ -68,7 +68,7 @@ async function deleteMaterial(element) {
     return false;
   }
  $.ajax({
-  type: "DELETE",
+  type: "POST",
   url: link,
   success: function (response) {
     if (response.status == 200) {
