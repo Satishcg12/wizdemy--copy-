@@ -1,6 +1,6 @@
 {
-  "theme_color": "currentColor",
-  "background_color": "currentColor",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
   "display": "standalone",
   "scope": "/",
   "start_url": "/",
@@ -10,7 +10,7 @@
   "description": "WizDemy is a platform for students to share study materials, ask questions and get answers",
   "icons": [
     {
-      "src": "icons/maskable-icon.png",
+      "src": "icons/maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
