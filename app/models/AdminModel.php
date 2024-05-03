@@ -75,10 +75,6 @@ class AdminModel extends Model
       ->groupBy('a.admin_id')
       ->get();
 
-    //if admin not found
-    if ($result['admin_id'] == null){
-      return false;
-    }
 
     return $result;
   }
@@ -320,3 +316,5 @@ class AdminModel extends Model
     ];
   }
 }
+
+
