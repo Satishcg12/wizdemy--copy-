@@ -10,16 +10,15 @@
   <meta name="theme-color" content="#ffffff" />
   <link rel="icon" href="/assets/icons/favicon.ico" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png" />
-  <!-- <link rel="manifest" href="https://cdn.jsdelivr.net/gh/rayyan-balami/wizdemy/public/assets/manifestHost.json" /> -->
   <link rel="manifest" href="/assets/manifest.json" />
 
   <!-- Open Graph / Facebook -->
-  <meta property="og:image" content="<?= $ogImage ?? '/assets/images/og-thumbnail.png' ?>" />
   <meta property="og:title" content="<?= $pageTitle ?>" />
   <meta property="og:description" content="<?= $pageDescription ?? SITE_DESCRIPTION ?>" />
   <meta property="og:url" content="<?= SITE_DOMAIN . $_SERVER['REQUEST_URI'] ?>" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="<?= SITE_NAME ?>" />
+  <meta property="og:image" content="<?= $ogImage ?? '/assets/images/og-thumbnail.png' ?>" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -52,7 +51,7 @@
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/assets/js/sw.js')
           .then(registration => {
-            console.log('Service Worker registered:', registration);
+            // Success callback. No action needed here if you don't want to log success.
           })
           .catch(error => {
             console.error('Service Worker registration failed:', error);
